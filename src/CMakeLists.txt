@@ -87,7 +87,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${ARM64_PROJECT_NAME} main.cpp
+    add_executable(${ARM64_PROJECT_NAME} server/main.cpp
             ../include/server/GlobalResource.h          server/GlobalResource.cpp
             ../include/server/HttpUtils.h               server/HttpUtils.cpp
             ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
@@ -121,7 +121,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${LINUX_PROJECT_NAME} main.cpp
+    add_executable(${LINUX_PROJECT_NAME} server/main.cpp
             ../include/server/GlobalResource.h          server/GlobalResource.cpp
             ../include/server/HttpUtils.h               server/HttpUtils.cpp
             ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
