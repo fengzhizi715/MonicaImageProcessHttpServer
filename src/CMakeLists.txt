@@ -35,7 +35,7 @@ if(APPLE)
     message(STATUS "当前平台：macOS（不支持 CUDA，使用 CPU 版本）")
     set(ENABLE_CUDA OFF)
 elseif(WIN32 OR UNIX)
-    # 在 Windows/Linux 上查找 CUDA 工具包（推荐使用 CUDAToolkit 模块，CMake 3.10+ 中包含对 CUDA 的一流支持）
+    # 在 Windows/Linux 上查找 CUDA 工具包（推荐使用 CUDAToolkit 模块）
     find_package(CUDAToolkit QUIET)
     if(CUDAToolkit_FOUND)
         message(STATUS "CUDA 工具包已找到，使用 GPU 版本")

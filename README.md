@@ -3,7 +3,7 @@
 
 # 一. 说明
 该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 用于部署深度学习模型。
-客户端可以通过 http 服务调用模型，完成推理。
+Monica 客户端可以通过 http 服务调用模型，完成推理。
 
 
 项目目录结构
@@ -72,7 +72,7 @@ cmake --build .
 
 # 三. http server
 
-http server 部署了几个模型，方便 Monica 无需从本地加载模型文件，只需通过调用 http 服务即可调用模型。
+http server 部署了几个模型，方便 Monica 通过调用 http 暴露的服务完成调用这些模型。
 
 ## 3.1 http server 的运行
 运行编译后的程序
