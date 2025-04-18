@@ -13,8 +13,8 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "GlobalResource.h"
-#include "HttpUtils.h"
+#include "../../include/server/GlobalResource.h"
+#include "../../include/server/HttpUtils.h"
 
 namespace po = boost::program_options;
 namespace beast = boost::beast;

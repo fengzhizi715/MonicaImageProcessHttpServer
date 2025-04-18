@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "GlobalResource.h"
+#include "../../include/server/GlobalResource.h"
 #include "../../include/Constants.h"
 
 GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {

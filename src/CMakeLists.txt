@@ -58,8 +58,8 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_executable(${PROJECT_NAME} server/main.cpp
-        server/GlobalResource.h                     server/GlobalResource.cpp
-        server/HttpUtils.h                          server/HttpUtils.cpp
+        ../include/server/GlobalResource.h          server/GlobalResource.cpp
+        ../include/server/HttpUtils.h               server/HttpUtils.cpp
         ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
         ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
         ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
@@ -88,8 +88,8 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_executable(${ARM64_PROJECT_NAME} main.cpp
-            GlobalResource.h                            GlobalResource.cpp
-            HttpUtils.h                                 HttpUtils.cpp
+            ../include/server/GlobalResource.h          server/GlobalResource.cpp
+            ../include/server/HttpUtils.h               server/HttpUtils.cpp
             ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
             ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
             ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
@@ -122,8 +122,8 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_executable(${LINUX_PROJECT_NAME} main.cpp
-            GlobalResource.h                            GlobalResource.cpp
-            HttpUtils.h                                 HttpUtils.cpp
+            ../include/server/GlobalResource.h          server/GlobalResource.cpp
+            ../include/server/HttpUtils.h               server/HttpUtils.cpp
             ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
             ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
             ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
