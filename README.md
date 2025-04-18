@@ -133,7 +133,6 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/Tony/target.jpg" --output output.jpg
 ```
 
-
 ## 3.2.5 /api/cartoon
 将图像转换成不同的漫画卡通风格
 
@@ -154,3 +153,8 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 > 链接: https://pan.baidu.com/s/10bIlCT08XPtUd_GBOGH6cw?pwd=xu4f
 >
 > 模型下载下来，存放在工程的 /models/ 目录下
+
+
+# 五. TODO List:
+* 增加日志模块
+* 增加 json 模块
