@@ -250,7 +250,7 @@ int main(int argc, char* argv[]) {
     // 默认配置参数
     int port = 8080;
     int numThreads = std::thread::hardware_concurrency();
-    std::string modelPath = "/Users/Tony/IdeaProjects/Monica/resources/common";
+    std::string modelPath = "/Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models";
     size_t maxBodySize = 10 * 1024 * 1024; // 默认最大请求体大小为 10 MB
 
     // 定义命令行选项
