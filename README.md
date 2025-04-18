@@ -83,7 +83,7 @@ Allowed options:
   -h [ --help ]                         Display help message
   -p [ --http-port ] arg (=8080)        HTTP server port
   -t [ --num-threads ] arg (=16)        Number of worker threads
-  -m [ --model-dir ] arg (=/Users/Tony/IdeaProjects/Monica/resources/common)
+  -m [ --model-dir ] arg (=/Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models)
                                         Path to the model directory
   -b [ --max-body-size ] arg (=10485760)
                                         Maximum HTTP body size in bytes
@@ -91,7 +91,7 @@ Allowed options:
 
 服务器启动:
 ```
-./MonicaImageProcessHttpServer --http-port 8080 --num-threads 4 --model-dir /Users/Tony/IdeaProjects/Monica/resources/common
+./MonicaImageProcessHttpServer --http-port 8080 --num-threads 4 --model-dir /Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models
 ```
 
 ## 3.2 接口
