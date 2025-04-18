@@ -42,6 +42,7 @@ MonicaImageProcess/
 │       └── InformativeDrawings.cpp  # 使用 OnnxRuntime 加载模型实现生成素描画的源文件
 │   └── utils/                       # 工具类模块
 │   └── CMakeLists.txt               # 本地算法的构建脚本
+├── models/                          # 存放模型文件的目录
 └── .gitignore                       # git 忽略和不追踪的文件
 ```
 
@@ -138,3 +139,16 @@ curl 调用的示例:
 ```
 curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/src.jpg" --output output.jpg
 ```
+
+# 四. 深度学习的模型
+存放在当前项目的 /models 文件夹下
+
+> 目前，有三个模型没有提交到 github，主要是太大了。每个都超过了 100 M 我把他们放到百度网盘
+>
+> 链接: https://pan.baidu.com/s/15XhVHKi-vPGjB2hYa33v_A?pwd=d9mm
+>
+> 链接: https://pan.baidu.com/s/1cZvMSuOGxl8CuyHdJM27kw?pwd=9mun
+>
+> 链接: https://pan.baidu.com/s/10bIlCT08XPtUd_GBOGH6cw?pwd=xu4f
+>
+> 模型下载下来，存放在工程的 /models/ 目录下
