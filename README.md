@@ -41,6 +41,8 @@ MonicaImageProcess/
 │   └── sketchDrawing/               # 生成素描画模块
 │       └── InformativeDrawings.cpp  # 使用 OnnxRuntime 加载模型实现生成素描画的源文件
 │   └── utils/                       # 工具类模块
+│       └── Timer.cpp                # 统计某段程序花费时间的工具类
+│       └── Utils.cpp                # 常用的工具类
 │   └── CMakeLists.txt               # 本地算法的构建脚本
 ├── models/                          # 存放模型文件的目录
 └── .gitignore                       # git 忽略和不追踪的文件
