@@ -3,7 +3,7 @@
 
 # 一. 说明
 该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 用于部署深度学习模型。
-Monica 客户端可以通过 http 服务调用模型，完成推理。
+Monica 客户端可以通过调用 http 服务来调用模型，完成推理。
 
 
 项目目录结构
