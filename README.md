@@ -91,6 +91,16 @@ Allowed options:
                                         Maximum HTTP body size in bytes
 ```
 
+### Options
+
+| Option                  | Description                                                                                                                                                             |
+|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--num-threads`         | Worker thread pool size.                                                                                                                                                |
+| `--http-port`           | HTTP server port.<br/>Default: `8080`                                                                                                                                   |
+| `--max-body-size`       | HTTP/HTTPS request payload size limit.<br />Default: 1024 * 1024 * 10(10MB)`                                                                                            |
+| `--model-dir`           | Model directory path<br/> |
+
+
 服务器启动:
 ```
 ./MonicaImageProcessHttpServer --http-port 8080 --num-threads 4 --model-dir /Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models
