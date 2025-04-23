@@ -7,6 +7,7 @@
 #include <iostream>
 #include "../../include/server/GlobalResource.h"
 #include "../../include/Constants.h"
+#include "../utils/aixlog.hpp"
 
 GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
 
@@ -67,11 +68,11 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     animeGANTinyCute       = std::make_unique<AnimeGAN>(animeGANTinyCuteModePath, animeGANTinyCuteLogId.c_str(), onnx_provider.c_str());
 
     // 初始化资源，加载模型文件
-    cout << "GlobalResource initialized." << endl;
+    PLOG(L_INFO) << "GlobalResource initialized." << std::endl;
 }
 
 Mat GlobalResource::processSketchDrawing(Mat src) {
-    cout << "process SketchDrawing..." << endl;
+    PLOG(L_INFO) << "process SketchDrawing..." << std::endl;
 
     Mat dst;
     sketchDrawing.get()->inferImage(src, dst);
@@ -88,7 +89,7 @@ Mat GlobalResource::processFaceDetect(Mat src) {
 }
 
 Mat GlobalResource::processFaceLandMark(Mat src) {
-    cout << "process FaceDetect..." << endl;
+    cout << "process FaceLandMark..." << endl;
 
     Mat dst;
 

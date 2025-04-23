@@ -15,6 +15,7 @@
 #include <vector>
 #include "../../include/server/GlobalResource.h"
 #include "../../include/server/HttpUtils.h"
+#include "../utils/aixlog.hpp"
 
 namespace po = boost::program_options;
 namespace beast = boost::beast;
@@ -246,6 +247,42 @@ private:
     }
 };
 
+class SinkCoutWithFilter : public AixLog::SinkCout {
+    AixLog::Filter _allow;
+    AixLog::Filter _deny;
+
+public:
+    SinkCoutWithFilter(
+            const AixLog::Filter &allow, const AixLog::Filter &deny,
+            const std::string &format = "%Y-%m-%d %H:%M:%S.#ms [#severity] (#tag_func)"
+    )
+            : SinkCout(AixLog::Filter(), format), _allow(allow), _deny(deny) {
+    }
+
+    void log(const AixLog::Metadata &metadata, const std::string &message) override {
+        if ((_allow.is_empty() || _allow.match(metadata)) && (_deny.is_empty() || !_deny.match(metadata)))
+            SinkCout::log(metadata, message);
+    }
+};
+
+class SinkFileWithFilter : public AixLog::SinkFile {
+    AixLog::Filter _allow;
+    AixLog::Filter _deny;
+
+public:
+    SinkFileWithFilter(
+            const AixLog::Filter &allow, const AixLog::Filter &deny, const std::string &filename,
+            const std::string &format = "%Y-%m-%d %H:%M:%S.#ms [#severity] (#tag_func)"
+    )
+            : SinkFile(AixLog::Filter(), filename, format), _allow(allow), _deny(deny) {
+    }
+
+    void log(const AixLog::Metadata &metadata, const std::string &message) override {
+        if ((_allow.is_empty() || _allow.match(metadata)) && (_deny.is_empty() || !_deny.match(metadata)))
+            SinkFile::log(metadata, message);
+    }
+};
+
 int main(int argc, char* argv[]) {
     // 默认配置参数
     int port = 8080;
@@ -253,8 +290,9 @@ int main(int argc, char* argv[]) {
     std::string modelPath = "/Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models";
     size_t maxBodySize = 10 * 1024 * 1024; // 默认最大请求体大小为 10 MB
 
+
     // 定义命令行选项
-    po::options_description desc("Allowed options");
+    po::options_description desc("Allowed options", 200);
     desc.add_options()
             ("help,h", "Display help message")
             ("http-port,p", po::value<int>(&port)->default_value(8080), "HTTP server port")
@@ -271,6 +309,26 @@ int main(int argc, char* argv[]) {
         std::cout << desc << "\n";
         return 0;
     }
+
+    AixLog::Severity log_level = AixLog::Severity::info;
+    std::shared_ptr<AixLog::Sink> log_file;
+    std::shared_ptr<AixLog::Sink> log_access_file;
+    AixLog::Filter for_access;
+    for_access.add_filter("ACCESS", AixLog::Severity::info);
+
+//    if (config.log_file.empty())
+        log_file = std::make_shared<SinkCoutWithFilter>(log_level, for_access);
+//    else
+//        log_file = std::make_shared<SinkFileWithFilter>(log_level, for_access, config.log_file);
+
+//    if (config.access_log_file.empty())
+        log_access_file = std::make_shared<SinkCoutWithFilter>(for_access, AixLog::Filter());
+//    else
+//        log_access_file = std::make_shared<SinkFileWithFilter>(
+//                for_access, AixLog::Filter(), config.access_log_file, "%Y-%m-%d %H-%M-%S.#ms [#severity]"
+//        );
+
+    AixLog::Log::init({log_file, log_access_file});
 
     net::io_context ioc{numThreads};
     tcp::endpoint endpoint{tcp::v4(), static_cast<unsigned short>(port)};
