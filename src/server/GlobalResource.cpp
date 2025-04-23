@@ -97,7 +97,8 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
         vector<Bbox> boxes;
         yolov8Face.get()->detect(src, boxes);
         dst = src.clone();
-        for (auto box: boxes) {rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), scalar, 4, 8, 0);
+        for (auto box: boxes) {
+           rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), scalar, 4, 8, 0);
 
            vector<Point2f> face_landmark_5of68;
            face68Landmarks.get()->detect(src, box, face_landmark_5of68);
