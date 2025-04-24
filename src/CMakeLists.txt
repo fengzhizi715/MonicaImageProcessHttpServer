@@ -102,7 +102,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             ../include/common/OnnxRuntimeBase.h         common/OnnxRuntimeBase.cpp
             ../include/utils/Timer.h                    utils/Timer.cpp
             ../include/utils/Utils.h                    utils/Utils.cpp
-                                                        utils/aixlog.hpp)
+            ../include/server/Config.h                  utils/aixlog.hpp)
 
     target_link_libraries(${ARM64_PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${ARM64_PROJECT_NAME} ${Boost_LIBRARIES})
@@ -137,7 +137,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
             ../include/common/OnnxRuntimeBase.h         common/OnnxRuntimeBase.cpp
             ../include/utils/Timer.h                    utils/Timer.cpp
             ../include/utils/Utils.h                    utils/Utils.cpp
-                                                        utils/aixlog.hpp)
+            ../include/server/Config.h                  utils/aixlog.hpp)
 
     if(ENABLE_CUDA)
         target_compile_definitions(${LINUX_PROJECT_NAME} PRIVATE USE_GPU)
