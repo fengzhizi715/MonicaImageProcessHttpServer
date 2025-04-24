@@ -71,7 +71,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
         ../include/common/OnnxRuntimeBase.h         common/OnnxRuntimeBase.cpp
         ../include/utils/Timer.h                    utils/Timer.cpp
         ../include/utils/Utils.h                    utils/Utils.cpp
-                                                    utils/aixlog.hpp)
+        ../include/server/Config.h                  utils/aixlog.hpp)
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})

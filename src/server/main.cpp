@@ -15,6 +15,7 @@
 #include <vector>
 #include "../../include/server/GlobalResource.h"
 #include "../../include/server/HttpUtils.h"
+#include "../../include/server/Config.h"
 #include "../utils/aixlog.hpp"
 
 namespace po = boost::program_options;
@@ -284,12 +285,13 @@ public:
 };
 
 int main(int argc, char* argv[]) {
+
+    Config config;
     // 默认配置参数
     int port = 8080;
     int numThreads = std::thread::hardware_concurrency();
     std::string modelPath = "/Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models";
     size_t maxBodySize = 10 * 1024 * 1024; // 默认最大请求体大小为 10 MB
-
 
     // 定义命令行选项
     po::options_description desc("Allowed options", 200);
@@ -298,7 +300,10 @@ int main(int argc, char* argv[]) {
             ("http-port,p", po::value<int>(&port)->default_value(8080), "HTTP server port")
             ("num-threads,t", po::value<int>(&numThreads)->default_value(std::thread::hardware_concurrency()), "Number of worker threads")
             ("model-dir,m", po::value<std::string>(&modelPath)->default_value(modelPath), "Path to the model directory")
-            ("max-body-size,b", po::value<size_t>(&maxBodySize)->default_value(maxBodySize), "Maximum HTTP body size in bytes");
+            ("max-body-size,b", po::value<size_t>(&maxBodySize)->default_value(maxBodySize), "Maximum HTTP body size in bytes")
+            ("log-level", po::value<std::string>()->default_value("info"),"Log level(debug, info, warn, error, fatal).\nDefault: info")
+            ("log-file", po::value<std::string>()->default_value(""),"Log file path.If not specified, logs will be printed to stdout.")
+            ("access-log-file", po::value<std::string>()->default_value(""),"Access log file path.\nIf not specified, logs will be printed to stdout.");
 
     // 解析命令行参数
     po::variables_map vm;
@@ -310,23 +315,38 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    config.log_level = vm["log-level"].as<std::string>();
+    config.log_file = vm["log-file"].as<std::string>();
+    config.access_log_file = vm["access-log-file"].as<std::string>();
+
+    std::map<AixLog::Severity, std::string> log_level_map = {
+            {AixLog::Severity::debug, "debug"}, {AixLog::Severity::info, "info"},	{AixLog::Severity::warning, "warn"},
+            {AixLog::Severity::error, "error"}, {AixLog::Severity::fatal, "fatal"},
+    };
     AixLog::Severity log_level = AixLog::Severity::info;
+    for (auto &level : log_level_map) {
+        if (config.log_level == level.second) {
+            log_level = level.first;
+            break;
+        }
+    }
+
     std::shared_ptr<AixLog::Sink> log_file;
     std::shared_ptr<AixLog::Sink> log_access_file;
     AixLog::Filter for_access;
     for_access.add_filter("ACCESS", AixLog::Severity::info);
 
-//    if (config.log_file.empty())
+    if (config.log_file.empty())
         log_file = std::make_shared<SinkCoutWithFilter>(log_level, for_access);
-//    else
-//        log_file = std::make_shared<SinkFileWithFilter>(log_level, for_access, config.log_file);
+    else
+        log_file = std::make_shared<SinkFileWithFilter>(log_level, for_access, config.log_file);
 
-//    if (config.access_log_file.empty())
+    if (config.access_log_file.empty())
         log_access_file = std::make_shared<SinkCoutWithFilter>(for_access, AixLog::Filter());
-//    else
-//        log_access_file = std::make_shared<SinkFileWithFilter>(
-//                for_access, AixLog::Filter(), config.access_log_file, "%Y-%m-%d %H-%M-%S.#ms [#severity]"
-//        );
+    else
+        log_access_file = std::make_shared<SinkFileWithFilter>(
+                for_access, AixLog::Filter(), config.access_log_file, "%Y-%m-%d %H-%M-%S.#ms [#severity]"
+        );
 
     AixLog::Log::init({log_file, log_access_file});
 
