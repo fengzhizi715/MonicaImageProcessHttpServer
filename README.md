@@ -3,6 +3,7 @@
 
 # 一. 说明
 该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 用于部署深度学习模型。
+
 Monica 客户端可以通过调用 http 服务来调用模型，完成推理。
 
 
@@ -166,5 +167,5 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 
 
 # 五. TODO List:
-* 增加日志模块
+
 * 增加 json 模块
