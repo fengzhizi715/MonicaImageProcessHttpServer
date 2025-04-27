@@ -81,7 +81,7 @@ Mat GlobalResource::processSketchDrawing(Mat src) {
 }
 
 Mat GlobalResource::processFaceDetect(Mat src) {
-    cout << "process FaceDetect..." << endl;
+    PLOG(L_INFO) << "process FaceDetect..." << endl;
 
     Mat dst;
     faceDetect.get()->inferImage(src, dst);
@@ -89,7 +89,7 @@ Mat GlobalResource::processFaceDetect(Mat src) {
 }
 
 Mat GlobalResource::processFaceLandMark(Mat src) {
-    cout << "process FaceLandMark..." << endl;
+    PLOG(L_INFO) << "process FaceLandMark..." << endl;
 
     Mat dst;
 
@@ -114,6 +114,8 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
 }
 
 Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
+    PLOG(L_INFO) << "process FaceSwap..." << endl;
+
     vector<Bbox> boxes;
     yolov8Face->detect(src, boxes);
     int position = 0; // 一张图片里可能有多个人脸，这里只考虑1个人脸的情况
@@ -148,7 +150,7 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
 }
 
 Mat GlobalResource::processCartoon(Mat src, int type) {
-    cout << "process Cartoon..." << endl;
+    PLOG(L_INFO) << "process Cartoon..." << endl;
 
     Mat dst;
     switch(type) {
