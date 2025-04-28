@@ -17,12 +17,15 @@
 #include "../../include/server/HttpUtils.h"
 #include "../../include/server/Config.h"
 #include "../utils/aixlog.hpp"
+#include "../utils/json.hpp"
 
 namespace po = boost::program_options;
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
+using json = nlohmann::json;
+using ordered_json = nlohmann::ordered_json;
 
 #define CONTENT_TYPE_PLAIN_TEXT "text/plain"
 #define CONTENT_TYPE_IMAGE_JPEG "image/jpeg"
@@ -284,6 +287,22 @@ public:
     }
 };
 
+void print_config(Config config) {
+    auto config_json = ordered_json::object();
+
+    config_json["workers"] = config.num_threads;
+    config_json["model_dir"] = config.model_dir;
+    config_json["http_port"] = config.http_port;
+    config_json["request_payload_limit"] = config.request_payload_limit;
+
+    config_json["log"] = json::object();
+    config_json["log"]["level"] = config.log_level;
+    config_json["log"]["file"] = config.log_file;
+    config_json["log"]["access_file"] = config.access_log_file;
+
+    PLOG(L_INFO) << "Config values:\n" << config_json.dump(2) << std::endl;
+}
+
 int main(int argc, char* argv[]) {
 
     Config config;
@@ -314,6 +333,11 @@ int main(int argc, char* argv[]) {
         std::cout << desc << "\n";
         return 0;
     }
+
+    config.num_threads = numThreads;
+    config.model_dir = modelPath;
+    config.http_port = port;
+    config.request_payload_limit = maxBodySize;
 
     config.log_level = vm["log-level"].as<std::string>();
     config.log_file = vm["log-file"].as<std::string>();
@@ -349,6 +373,8 @@ int main(int argc, char* argv[]) {
         );
 
     AixLog::Log::init({log_file, log_access_file});
+
+    print_config(config);
 
     net::io_context ioc{numThreads};
     tcp::endpoint endpoint{tcp::v4(), static_cast<unsigned short>(port)};
