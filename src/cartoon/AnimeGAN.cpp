@@ -8,7 +8,7 @@ AnimeGAN::AnimeGAN(string modelPath, const char* logId, const char* provider): O
 {
 }
 
-// 工具函数：将 OpenCV 的 Mat 转为 float tensor（NCHW）
+// 将 OpenCV 的 Mat 转为 float tensor（NCHW）
 std::vector<float> prepare_input_nhwc(const cv::Mat& img) {
     std::vector<float> input_tensor_values;
     for (int y = 0; y < img.rows; ++y) {
@@ -22,7 +22,7 @@ std::vector<float> prepare_input_nhwc(const cv::Mat& img) {
 }
 
 
-// 工具函数：将输出 tensor 转为 Mat
+// 将输出 tensor 转为 Mat
 cv::Mat tensor_to_mat_nhwc(const float* data, int h, int w) {
     cv::Mat output(h, w, CV_32FC3);
     int idx = 0;
