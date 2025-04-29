@@ -81,15 +81,18 @@ http server 部署了几个模型，方便 Monica 通过调用 http 暴露的服
 运行编译后的程序
 
 ```
-Tony-MacBook-Pro:build tony$ ./MonicaImageProcessHttpServer --help
+Tony-MBP:build tony$ ./MonicaImageProcessHttpServer --help
 Allowed options:
-  -h [ --help ]                         Display help message
-  -p [ --http-port ] arg (=8080)        HTTP server port
-  -t [ --num-threads ] arg (=16)        Number of worker threads
-  -m [ --model-dir ] arg (=/Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models)
-                                        Path to the model directory
-  -b [ --max-body-size ] arg (=10485760)
-                                        Maximum HTTP body size in bytes
+  -h [ --help ]                                                                           Display help message
+  -p [ --http-port ] arg (=8080)                                                          HTTP server port
+  -t [ --num-threads ] arg (=16)                                                          Number of worker threads
+  -m [ --model-dir ] arg (=/Users/Tony/CLionProjects/MonicaImageProcessHttpServer/models) Path to the model directory
+  -b [ --max-body-size ] arg (=10485760)                                                  Maximum HTTP body size in bytes
+  --log-level arg (=info)                                                                 Log level(debug, info, warn, error, fatal).
+                                                                                          Default: info
+  --log-file arg                                                                          Log file path.If not specified, logs will be printed to stdout.
+  --access-log-file arg                                                                   Access log file path.
+                                                                                          If not specified, logs will be printed to stdout.
 ```
 
 ### Options
