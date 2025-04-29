@@ -39,9 +39,12 @@ MonicaImageProcess/
 │       ├── GlobalResource.cpp       # http 服务加载模型、调用模型的源文件
 │       ├── HttpUtils.cpp            # http 服务模块工具类的源文件
 │       └── main.cpp                 # http 服务模块主程序入口文件
+│       └── Server.cpp               # 构建 http 服务器的源文件
 │   └── sketchDrawing/               # 生成素描画模块
 │       └── InformativeDrawings.cpp  # 使用 OnnxRuntime 加载模型实现生成素描画的源文件
 │   └── utils/                       # 工具类模块
+│       └── aixlog.hpp               # aixlog 日志库
+│       └── json.hpp                 # json 库
 │       └── Timer.cpp                # 统计某段程序花费时间的工具类
 │       └── Utils.cpp                # 常用的工具类
 │   └── CMakeLists.txt               # 本地算法的构建脚本
