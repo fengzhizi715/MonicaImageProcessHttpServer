@@ -18,6 +18,7 @@ public:
     OnnxRuntimeBase(std::string modelPath, const char* logId, const char* provider);
     ~OnnxRuntimeBase();
 
+    // 模型的推理
     virtual std::vector<Ort::Value> forward(Ort::Value& inputTensors);
 
 protected:

@@ -13,18 +13,22 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <onnxruntime_cxx_api.h>
 #include "../../include/server/GlobalResource.h"
 #include "../../include/server/HttpUtils.h"
 #include "../../include/server/Config.h"
+#include "../utils/json.hpp"
 
 namespace po = boost::program_options;
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
+using json = nlohmann::json;
 
 #define CONTENT_TYPE_PLAIN_TEXT "text/plain"
 #define CONTENT_TYPE_IMAGE_JPEG "image/jpeg"
+#define CONTENT_TYPE_JSON "application/json"
 
 // 用于处理单个 HTTP 会话
 class session : public std::enable_shared_from_this<session> {
@@ -78,6 +82,18 @@ private:
             http::response<http::string_body> res{http::status::ok, req_.version()};
             res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
             res.body() = "OK";
+            res.prepare_payload();
+            return do_write(res);
+        }
+
+        if (target == "/version") {
+            auto json_string = json::object({
+                {"onnxruntime_version", OrtGetApiBase()->GetVersionString() },
+                {"server_version","1.0.0"}}).dump();
+
+            http::response<http::string_body> res{http::status::ok, req_.version()};
+            res.set(http::field::content_type, CONTENT_TYPE_JSON);
+            res.body() = json_string;
             res.prepare_payload();
             return do_write(res);
         }
