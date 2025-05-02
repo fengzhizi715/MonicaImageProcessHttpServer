@@ -115,8 +115,6 @@ Allowed options:
 
 ## 3.2 接口
 
-### 3.2.0 
-
 /health
 服务器状态检测
 ```
@@ -124,7 +122,7 @@ curl http://localhost:8080/health
 ```
 
 /version
-版本信息检测
+获取版本信息
 
 ```
 curl http://localhost:8080/version
@@ -186,4 +184,4 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 
 # 五. TODO List:
 
-* 完善异常的处理
+* 完善异常处理机制
