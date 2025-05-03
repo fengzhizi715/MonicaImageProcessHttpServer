@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "../../include/common/OnnxRuntimeBase.h"
-#include "../../include/Constants.h"
+#include "../../include/onnxruntime/OnnxRuntimeBase.h"
+#include "../../include/onnxruntime/Constants.h"
 
 using namespace cv;
 using namespace std;

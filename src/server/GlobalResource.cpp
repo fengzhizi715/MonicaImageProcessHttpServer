@@ -6,7 +6,7 @@
 #include <string>
 #include <iostream>
 #include "../../include/server/GlobalResource.h"
-#include "../../include/Constants.h"
+#include "../../include/onnxruntime/Constants.h"
 #include "../utils/aixlog.hpp"
 
 GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {

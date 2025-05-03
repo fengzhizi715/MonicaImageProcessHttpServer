@@ -8,7 +8,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <onnxruntime_cxx_api.h>
-#include "../common/OnnxRuntimeBase.h"
+#include "../onnxruntime/OnnxRuntimeBase.h"
 #include "../utils/Utils.h"
 
 class FaceEnhance: public OnnxRuntimeBase

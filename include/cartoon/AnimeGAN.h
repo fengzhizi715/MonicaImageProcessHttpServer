@@ -13,7 +13,7 @@
 #include <opencv2/highgui.hpp>
 //#include <cuda_provider_factory.h>
 #include <onnxruntime_cxx_api.h>
-#include "../common/OnnxRuntimeBase.h"
+#include "../onnxruntime/OnnxRuntimeBase.h"
 
 using namespace cv;
 using namespace std;

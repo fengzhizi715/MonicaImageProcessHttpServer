@@ -69,7 +69,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
         ../include/faceSwap/FaceSwap.h              faceSwap/FaceSwap.cpp
         ../include/faceSwap/FaceEnhance.h           faceSwap/FaceEnhance.cpp
         ../include/cartoon/AnimeGAN.h               cartoon/AnimeGAN.cpp
-        ../include/common/OnnxRuntimeBase.h         common/OnnxRuntimeBase.cpp
+        ../include/onnxruntime/OnnxRuntimeBase.h    onnxruntime/OnnxRuntimeBase.cpp
         ../include/utils/Timer.h                    utils/Timer.cpp
         ../include/utils/Utils.h                    utils/Utils.cpp
         ../include/server/Config.h                  utils/aixlog.hpp
@@ -102,7 +102,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             ../include/faceSwap/FaceSwap.h              faceSwap/FaceSwap.cpp
             ../include/faceSwap/FaceEnhance.h           faceSwap/FaceEnhance.cpp
             ../include/cartoon/AnimeGAN.h               cartoon/AnimeGAN.cpp
-            ../include/common/OnnxRuntimeBase.h         common/OnnxRuntimeBase.cpp
+            ../include/onnxruntime/OnnxRuntimeBase.h    onnxruntime/OnnxRuntimeBase.cpp
             ../include/utils/Timer.h                    utils/Timer.cpp
             ../include/utils/Utils.h                    utils/Utils.cpp
             ../include/server/Config.h                  utils/aixlog.hpp
@@ -139,7 +139,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
             ../include/faceSwap/FaceSwap.h              faceSwap/FaceSwap.cpp
             ../include/faceSwap/FaceEnhance.h           faceSwap/FaceEnhance.cpp
             ../include/cartoon/AnimeGAN.h               cartoon/AnimeGAN.cpp
-            ../include/common/OnnxRuntimeBase.h         common/OnnxRuntimeBase.cpp
+            ../include/onnxruntime/OnnxRuntimeBase.h    onnxruntime/OnnxRuntimeBase.cpp
             ../include/utils/Timer.h                    utils/Timer.cpp
             ../include/utils/Utils.h                    utils/Utils.cpp
             ../include/server/Config.h                  utils/aixlog.hpp
