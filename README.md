@@ -10,7 +10,7 @@ Monica 客户端可以通过调用 http 服务来调用模型，完成推理。
 项目目录结构
 
 ```
-MonicaImageProcess/
+MonicaImageProcessHttpServer/
 ├── README.md                        # 项目简介
 ├── LICENSE                          # 项目许可证文件
 ├── CMakeLists.txt                   # CMake构建脚本（主）
