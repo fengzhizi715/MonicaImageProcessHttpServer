@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "../../include/sketchDrawing/SketchDrawing.h"
 #include "../../include/utils/Timer.h"
+#include "../utils/aixlog.hpp"
 
 SketchDrawing::SketchDrawing(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
@@ -53,9 +54,9 @@ void SketchDrawing::inferImage(Mat& src, Mat& dst)
     resize(dst, dst, Size(src.cols, src.rows));
     postprocessTimer.stop();
 
-    std::cout << std::fixed << std::setprecision(1);
-    std::cout << "image: " << src.rows << "x" << src.cols <<" "<< (preprocessTime + inferenceTime + postprocessTime) * 1000.0 << "ms" << std::endl;
-    std::cout << "speed: " << (preprocessTime * 1000.0) << "ms preprocess, ";
-    std::cout << (inferenceTime * 1000.0) << "ms inference, ";
-    std::cout << (postprocessTime * 1000.0) << "ms postprocess per image " << std::endl;
+    PLOG(L_INFO) << std::fixed << std::setprecision(1);
+    PLOG(L_INFO) << "image: " << src.rows << "x" << src.cols <<" "<< (preprocessTime + inferenceTime + postprocessTime) * 1000.0 << "ms" << std::endl;
+    PLOG(L_INFO) << "speed: " << (preprocessTime * 1000.0) << "ms preprocess, ";
+    PLOG(L_INFO) << (inferenceTime * 1000.0) << "ms inference, ";
+    PLOG(L_INFO) << (postprocessTime * 1000.0) << "ms postprocess per image " << std::endl;
 }
