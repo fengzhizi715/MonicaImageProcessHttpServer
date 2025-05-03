@@ -15,37 +15,37 @@ MonicaImageProcess/
 ├── LICENSE                          # 项目许可证文件
 ├── CMakeLists.txt                   # CMake构建脚本（主）
 ├── include/                         # 项目公共头文件目录
-│   └── cartoon/                     # 图像转换成卡通漫画模块的头文件目录
-│   └── common/                      # 封装基类模块的头文件目录
-│   └── faceDetect/                  # 人脸识别模块的头文件目录
-│   └── faceSwap/                    # 人脸替换模块的头文件目录
-│   └── server/                      # http 服务模块的头文件目录
-│   └── sketchDrawing/               # 生成素描画模块的头文件目录
+│   ├── cartoon/                     # 图像转换成卡通漫画模块的头文件目录
+│   ├── faceDetect/                  # 人脸识别模块的头文件目录
+│   ├── faceSwap/                    # 人脸替换模块的头文件目录
+│   ├── onnxruntime/                 # 封装 onnxruntime 模块的头文件目录
+│   ├── server/                      # http 服务模块的头文件目录
+│   ├── sketchDrawing/               # 生成素描画模块的头文件目录
 │   └── utils/                       # 工具类模块的头文件目录
 ├── src/                             # 项目主源代码目录
 │   └── cartoon/                     # 图像转换成卡通漫画模块
 │       └── AnimeGAN.cpp             # 使用 OnnxRuntime 加载 AnimeGANV3 模型的源文件
-│   └── common/                      # 封装基类模块
-│       └── OnnxRuntimeBase.cpp      # 封装 OnnxRuntime 的基类
 │   └── faceDetect/                  # 人脸识别模块
 │       └── FaceDetect.cpp           # 使用 OpenCV 的 dnn 模块加载模型实现的人脸识别检测的源文件
 │   └── faceSwap/                    # 人脸替换模块
-│       └── Face68Landmarks.cpp      # 使用 OnnxRuntime 加载模型实现查找人脸的关键点的源文件
-│       └── FaceEmbedding.cpp        # 使用 OnnxRuntime 加载模型实现人脸图像映射的源文件
-│       └── FaceEnhance.cpp          # 使用 OnnxRuntime 加载模型实现人脸增强的源文件
-│       └── FaceSwap.cpp             # 使用 OnnxRuntime 加载模型实现人脸替换的源文件
+│       ├── Face68Landmarks.cpp      # 使用 OnnxRuntime 加载模型实现查找人脸的关键点的源文件
+│       ├── FaceEmbedding.cpp        # 使用 OnnxRuntime 加载模型实现人脸图像映射的源文件
+│       ├── FaceEnhance.cpp          # 使用 OnnxRuntime 加载模型实现人脸增强的源文件
+│       ├── FaceSwap.cpp             # 使用 OnnxRuntime 加载模型实现人脸替换的源文件
 │       └── Yolov8Face.cpp           # 使用 OnnxRuntime 加载模型实现人脸检测的源文件
+│   └── onnxruntime/                 # 封装 onnxruntime 模块
+│       └── OnnxRuntimeBase.cpp      # 封装 OnnxRuntime 的基类
 │   └── server/                      # http 服务的模块
 │       ├── GlobalResource.cpp       # http 服务加载模型、调用模型的源文件
 │       ├── HttpUtils.cpp            # http 服务模块工具类的源文件
-│       └── main.cpp                 # http 服务模块主程序入口文件
+│       ├── main.cpp                 # http 服务模块主程序入口文件
 │       └── Server.cpp               # 构建 http 服务器的源文件
 │   └── sketchDrawing/               # 生成素描画模块
 │       └── InformativeDrawings.cpp  # 使用 OnnxRuntime 加载模型实现生成素描画的源文件
 │   └── utils/                       # 工具类模块
-│       └── aixlog.hpp               # aixlog 日志库
-│       └── json.hpp                 # json 库
-│       └── Timer.cpp                # 统计某段程序花费时间的工具类
+│       ├── aixlog.hpp               # aixlog 日志库
+│       ├── json.hpp                 # json 库
+│       ├── Timer.cpp                # 统计某段程序花费时间的工具类
 │       └── Utils.cpp                # 常用的工具类
 │   └── CMakeLists.txt               # 本地算法的构建脚本
 ├── models/                          # 存放模型文件的目录
