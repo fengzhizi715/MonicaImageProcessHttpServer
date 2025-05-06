@@ -78,7 +78,7 @@ cmake --build .
 
 # 三. http server
 
-http server 部署了一些模型，方便 Monica 通过调用 http 暴露的服务，完成调用这些模型的推理。
+http server 部署了一些服务，Monica 通过调用 http server 提供的 api，实现调用模型的推理。
 
 ## 3.1 http server 的运行
 运行编译后的程序
