@@ -5,15 +5,20 @@
 #ifndef MONICAIMAGEPROCESSHTTPSERVER_CODEFORMER_H
 #define MONICAIMAGEPROCESSHTTPSERVER_CODEFORMER_H
 
-class CodeFormer: public OnnxRuntimeBase
-{
+#include "../onnxruntime/OnnxRuntimeBase.h"
+
+using namespace cv;
+using namespace std;
+using namespace Ort;
+
+class CodeFormer: public OnnxRuntimeBase {
 public:
     CodeFormer(std::string modelPath, const char* logId, const char* provider);
 
     void inferImage(Mat& src, Mat& dst);
 
 private:
-    void preprocess(Mat srcimg);
+    void preprocess(Mat src);
     vector<float> input_image_;
     vector<double> input2_tensor;
     int inpWidth;
