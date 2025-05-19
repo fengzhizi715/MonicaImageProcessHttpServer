@@ -5,11 +5,13 @@
 #ifndef MONICAIMAGEPROCESSHTTPSERVER_CODEFORMER_H
 #define MONICAIMAGEPROCESSHTTPSERVER_CODEFORMER_H
 
-class CodeFormer
+class CodeFormer: public OnnxRuntimeBase
 {
 public:
-    CodeFormer(string modelpath);
-    Mat detect(Mat cv_image);
+    CodeFormer(std::string modelPath, const char* logId, const char* provider);
+
+    void inferImage(Mat& src, Mat& dst);
+
 private:
     void preprocess(Mat srcimg);
     vector<float> input_image_;
@@ -20,15 +22,6 @@ private:
     int outHeight;
 
     float min_max[2] = { -1,1 };
-
-    //存储初始化获得的可执行网络
-    Env env = Env(ORT_LOGGING_LEVEL_ERROR, "CodeFormer");
-    Ort::Session *ort_session = nullptr;
-    SessionOptions sessionOptions = SessionOptions();
-    vector<char*> input_names;
-    vector<char*> output_names;
-    vector<vector<int64_t>> input_node_dims; // >=1 outputs
-    vector<vector<int64_t>> output_node_dims; // >=1 outputs
 };
 
 #endif //MONICAIMAGEPROCESSHTTPSERVER_CODEFORMER_H
