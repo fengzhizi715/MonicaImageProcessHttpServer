@@ -81,3 +81,8 @@ std::vector<Ort::Value> OnnxRuntimeBase::forward(Ort::Value& inputTensors)
 {
     return ort_session.Run(RunOptions{ nullptr }, input_names.data(), &inputTensors, 1, output_names.data(), output_names.size());
 }
+
+std::vector<Ort::Value> OnnxRuntimeBase::forward(std::vector<Ort::Value>& inputs)
+{
+    return ort_session.Run(RunOptions{ nullptr }, input_names.data(), inputs.data(), inputs.size(), output_names.data(), output_names.size());
+}

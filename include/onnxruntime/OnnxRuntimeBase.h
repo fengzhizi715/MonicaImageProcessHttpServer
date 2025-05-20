@@ -21,6 +21,9 @@ public:
     // 模型的推理
     virtual std::vector<Ort::Value> forward(Ort::Value& inputTensors);
 
+    // 模型的推理
+    virtual std::vector<Ort::Value> forward(std::vector<Ort::Value>& inputs);
+
 protected:
     Ort::Env env;
     Ort::Session ort_session{ nullptr };

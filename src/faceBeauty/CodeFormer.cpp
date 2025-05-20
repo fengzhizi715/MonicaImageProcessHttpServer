@@ -45,7 +45,7 @@ void CodeFormer::inferImage(Mat& src, Mat& dst)
     vector<Value> ort_inputs;
     ort_inputs.push_back(Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size()));
     ort_inputs.push_back(Value::CreateTensor<double>(allocator_info, input2_tensor.data(), input2_tensor.size(), input2_shape_.data(), input2_shape_.size()));
-    vector<Value> ort_outputs = ort_session.Run(RunOptions{ nullptr }, input_names.data(), ort_inputs.data(), ort_inputs.size(), output_names.data(), output_names.size());
+    vector<Value> ort_outputs = this -> forward(ort_inputs);
 
     ////post_process
     float* pred = ort_outputs[0].GetTensorMutableData<float>();
