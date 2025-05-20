@@ -186,3 +186,4 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 
 * 新增人脸美颜的服务
 * 完善异常处理机制
+* 优化代码、统一代码风格
