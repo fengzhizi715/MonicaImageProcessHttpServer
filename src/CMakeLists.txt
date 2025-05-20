@@ -62,6 +62,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
         ../include/server/HttpUtils.h               server/HttpUtils.cpp
                                                     server/Server.cpp
         ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
+        ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
         ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
         ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
         ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
@@ -96,6 +97,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             ../include/server/HttpUtils.h               server/HttpUtils.cpp
                                                         server/Server.cpp
             ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
+            ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
             ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
             ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
             ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
@@ -134,6 +136,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
             ../include/server/HttpUtils.h               server/HttpUtils.cpp
                                                         server/Server.cpp
             ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
+            ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
             ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
             ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
             ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
