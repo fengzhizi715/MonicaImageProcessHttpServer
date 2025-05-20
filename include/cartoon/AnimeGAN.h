@@ -25,6 +25,7 @@ public:
     AnimeGAN(std::string modelPath, const char* logId, const char* provider);
 
     void inferImage(Mat& src, Mat& dst);
+
 private:
     const int inpWidth = 512;
     const int inpHeight = 512;
