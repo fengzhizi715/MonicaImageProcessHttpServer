@@ -66,7 +66,7 @@ void BeautyGan::inferImage(Mat& src, Mat makeup, Mat& dst) {
 
     // 图像预处理
     this->preprocess1(src, orig_sizeA);     // 原始人脸图像
-    this->preprocess2(src, orig_sizeA);     // 参考妆容图像
+    this->preprocess2(src, orig_sizeB);     // 参考妆容图像
 
     std::array<int64_t,4> input_shape {1,3,this->inpHeight, this->inpWidth};
 
