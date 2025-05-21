@@ -79,8 +79,7 @@ void BeautyGan::inferImage(Mat& src, Mat makeup, Mat& dst) {
 
     // 后处理
     float* output_data = ort_outputs.front().GetTensorMutableData<float>();
-
-    cv::Mat beautygan_crop = postprocess(output_data);
+    cv::Mat beautygan_crop = this->postprocess(output_data);
 
     cv::resize(beautygan_crop, dst, orig_sizeA);
 }
