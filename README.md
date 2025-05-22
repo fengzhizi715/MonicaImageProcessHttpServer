@@ -16,6 +16,7 @@ MonicaImageProcessHttpServer/
 ├── CMakeLists.txt                   # CMake构建脚本（主）
 ├── include/                         # 项目公共头文件目录
 │   ├── cartoon/                     # 图像转换成卡通漫画模块的头文件目录
+│   └── faceBeauty/                  # 人脸美颜模块的头文件目录
 │   ├── faceDetect/                  # 人脸识别模块的头文件目录
 │   ├── faceSwap/                    # 人脸替换模块的头文件目录
 │   ├── onnxruntime/                 # 封装 onnxruntime 模块的头文件目录
@@ -25,6 +26,10 @@ MonicaImageProcessHttpServer/
 ├── src/                             # 项目主源代码目录
 │   └── cartoon/                     # 图像转换成卡通漫画模块
 │       └── AnimeGAN.cpp             # 使用 OnnxRuntime 加载 AnimeGANV3 模型的源文件
+│   └── faceBeauty/                  # 人脸美颜模块
+│       └── BeautyGan.cpp            # 使用 OnnxRuntime 加载 BeautyGan 模型实现化妆的源文件
+│       └── CodeFormer.cpp           # 使用 OnnxRuntime 加载 CodeFormer 模型实现人脸细节重建的源文件
+│       └── FaceParsing.cpp          # 使用 OnnxRuntime 加载 Face Parsing 模型获得精准的面部掩码的源文件
 │   └── faceDetect/                  # 人脸识别模块
 │       └── FaceDetect.cpp           # 使用 OpenCV 的 dnn 模块加载模型实现的人脸识别检测的源文件
 │   └── faceSwap/                    # 人脸替换模块
