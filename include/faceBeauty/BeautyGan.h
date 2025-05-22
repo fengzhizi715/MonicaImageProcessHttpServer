@@ -18,8 +18,7 @@ public:
     void inferImage(Mat& src, Mat makeup, Mat& dst);
 
 private:
-    void preprocess1(Mat image, Size& origin_size);
-    void preprocess2(Mat image, Size& origin_size);
+    vector<float> preprocess(Mat image);
     Mat postprocess(float* output_data);
 
     vector<float> input_image_1;

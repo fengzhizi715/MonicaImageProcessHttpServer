@@ -11,26 +11,8 @@ BeautyGan::BeautyGan(std::string modelPath, const char* logId, const char* provi
     this->outWidth = output_node_dims[0][3];
 }
 
-void BeautyGan::preprocess1(Mat image, Size& origin_size)
+vector<float> BeautyGan::preprocess(Mat image)
 {
-    origin_size = image.size();  // 保存原始尺寸
-    cv::resize(image, image, cv::Size(this->inpWidth, this->inpHeight));
-    image.convertTo(image, CV_32F, 1.0 / 255.0);
-
-    std::vector<cv::Mat> channels(3);
-    cv::split(image, channels);
-
-    std::vector<float> result(this->inpWidth * this->inpHeight * image.channels());
-    for (int i = 0; i < 3; ++i) {
-        std::memcpy(result.data() + i * 256 * 256, channels[i].data, 256 * 256 * sizeof(float));
-    }
-
-    this->input_image_1 = result;
-}
-
-void BeautyGan::preprocess2(Mat image, Size& origin_size)
-{
-    origin_size = image.size();  // 保存原始尺寸
     cv::resize(image, image, cv::Size(this->inpWidth, this->inpHeight));
     image.convertTo(image, CV_32F, 1.0 / 255.0);
 
@@ -43,7 +25,7 @@ void BeautyGan::preprocess2(Mat image, Size& origin_size)
         std::memcpy(result.data() + i * channel_step, channels[i].data, channel_step * sizeof(float));
     }
 
-    this->input_image_2 = result;
+    return result;
 }
 
 cv::Mat BeautyGan::postprocess(float* output_data) {
@@ -63,12 +45,9 @@ cv::Mat BeautyGan::postprocess(float* output_data) {
 
 void BeautyGan::inferImage(Mat& src, Mat makeup, Mat& dst) {
 
-    cv::Size orig_sizeA;
-    cv::Size orig_sizeB;
-
     // 图像预处理
-    this->preprocess1(src, orig_sizeA);     // 原始人脸图像
-    this->preprocess2(src, orig_sizeB);     // 参考妆容图像
+    this->input_image_1 = this->preprocess(src);        // 原始人脸图像
+    this->input_image_2 = this->preprocess(makeup);     // 参考妆容图像
 
     std::array<int64_t,4> input_shape {1,3,this->inpHeight, this->inpWidth};
 
@@ -83,5 +62,5 @@ void BeautyGan::inferImage(Mat& src, Mat makeup, Mat& dst) {
     float* output_data = ort_outputs.front().GetTensorMutableData<float>();
     cv::Mat beautygan_crop = this->postprocess(output_data);
 
-    cv::resize(beautygan_crop, dst, orig_sizeA);
+    cv::resize(beautygan_crop, dst, src.size());
 }
