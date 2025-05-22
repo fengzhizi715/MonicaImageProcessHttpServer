@@ -19,7 +19,9 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
 #else
     const string& onnx_provider = OnnxProviders::CPU;
 #endif
-    sketchDrawing = std::make_unique<SketchDrawing>(sketchDrawingMode, onnx_logid.c_str(), onnx_provider.c_str());
+
+    const char* provider = onnx_provider.c_str();
+    sketchDrawing = std::make_unique<SketchDrawing>(sketchDrawingMode, onnx_logid.c_str(), provider);
 
     string faceProto = modelPath + "/opencv_face_detector.pbtxt";
     string faceModel = modelPath + "/opencv_face_detector_uint8.pb";
@@ -42,11 +44,11 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     const std::string& faceSwapLogId = "faceSwap";
     const std::string& faceEnhanceLogId = "faceEnhance";
 
-    yolov8Face      = std::make_unique<Yolov8Face>(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
-    face68Landmarks = std::make_unique<Face68Landmarks>(face68LandmarksModePath, face68LandmarksLogId.c_str(), onnx_provider.c_str());
-    faceEmbedding   = std::make_unique<FaceEmbedding>(faceEmbeddingModePath, faceEmbeddingLogId.c_str(), onnx_provider.c_str());
-    faceSwap        = std::make_unique<FaceSwap>(faceSwapModePath, faceSwapModePath2, faceSwapLogId.c_str(), onnx_provider.c_str());
-    faceEnhance     = std::make_unique<FaceEnhance>(faceEnhanceModePath, faceEnhanceLogId.c_str(), onnx_provider.c_str());
+    yolov8Face      = std::make_unique<Yolov8Face>(yolov8FaceModelPath, yolov8FaceLogId.c_str(), provider);
+    face68Landmarks = std::make_unique<Face68Landmarks>(face68LandmarksModePath, face68LandmarksLogId.c_str(), provider);
+    faceEmbedding   = std::make_unique<FaceEmbedding>(faceEmbeddingModePath, faceEmbeddingLogId.c_str(), provider);
+    faceSwap        = std::make_unique<FaceSwap>(faceSwapModePath, faceSwapModePath2, faceSwapLogId.c_str(), provider);
+    faceEnhance     = std::make_unique<FaceEnhance>(faceEnhanceModePath, faceEnhanceLogId.c_str(), provider);
 
 
     string animeGANHayaoModePath = modelPath + "/AnimeGANv3_Hayao_36.onnx";
@@ -61,11 +63,11 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     const std::string& animeGANShinkaiLogId = "animeGANShinkai";
     const std::string& animeGANTinyCuteLogId = "animeGANTinyCute";
 
-    animeGANHayao          = std::make_unique<AnimeGAN>(animeGANHayaoModePath, animeGANHayaoLogId.c_str(), onnx_provider.c_str());
-    animeGANJPFace         = std::make_unique<AnimeGAN>(animeGANJPFaceModePath, animeGANJPFaceLogId.c_str(), onnx_provider.c_str());
-    animeGANPortraitSketch = std::make_unique<AnimeGAN>(animeGANPortraitSketchModePath, animeGANPortraitSketchLogId.c_str(), onnx_provider.c_str());
-    animeGANShinkai        = std::make_unique<AnimeGAN>(animeGANShinkaiModePath, animeGANShinkaiLogId.c_str(), onnx_provider.c_str());
-    animeGANTinyCute       = std::make_unique<AnimeGAN>(animeGANTinyCuteModePath, animeGANTinyCuteLogId.c_str(), onnx_provider.c_str());
+    animeGANHayao          = std::make_unique<AnimeGAN>(animeGANHayaoModePath, animeGANHayaoLogId.c_str(), provider);
+    animeGANJPFace         = std::make_unique<AnimeGAN>(animeGANJPFaceModePath, animeGANJPFaceLogId.c_str(), provider);
+    animeGANPortraitSketch = std::make_unique<AnimeGAN>(animeGANPortraitSketchModePath, animeGANPortraitSketchLogId.c_str(), provider);
+    animeGANShinkai        = std::make_unique<AnimeGAN>(animeGANShinkaiModePath, animeGANShinkaiLogId.c_str(), provider);
+    animeGANTinyCute       = std::make_unique<AnimeGAN>(animeGANTinyCuteModePath, animeGANTinyCuteLogId.c_str(), provider);
 
     // 初始化资源，加载模型文件
     PLOG(L_INFO) << "GlobalResource initialized." << std::endl;
