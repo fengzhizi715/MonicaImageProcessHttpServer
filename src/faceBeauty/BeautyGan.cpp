@@ -14,13 +14,13 @@ BeautyGan::BeautyGan(std::string modelPath, const char* logId, const char* provi
 void BeautyGan::preprocess1(Mat image, Size& origin_size)
 {
     origin_size = image.size();  // 保存原始尺寸
-    cv::resize(image, image, cv::Size(256, 256));
+    cv::resize(image, image, cv::Size(this->inpWidth, this->inpHeight));
     image.convertTo(image, CV_32F, 1.0 / 255.0);
 
     std::vector<cv::Mat> channels(3);
     cv::split(image, channels);
 
-    std::vector<float> result(3 * 256 * 256);
+    std::vector<float> result(this->inpWidth * this->inpHeight * image.channels());
     for (int i = 0; i < 3; ++i) {
         std::memcpy(result.data() + i * 256 * 256, channels[i].data, 256 * 256 * sizeof(float));
     }
@@ -31,15 +31,16 @@ void BeautyGan::preprocess1(Mat image, Size& origin_size)
 void BeautyGan::preprocess2(Mat image, Size& origin_size)
 {
     origin_size = image.size();  // 保存原始尺寸
-    cv::resize(image, image, cv::Size(256, 256));
+    cv::resize(image, image, cv::Size(this->inpWidth, this->inpHeight));
     image.convertTo(image, CV_32F, 1.0 / 255.0);
 
     std::vector<cv::Mat> channels(3);
     cv::split(image, channels);
 
-    std::vector<float> result(3 * 256 * 256);
+    std::vector<float> result(this->inpWidth * this->inpHeight * image.channels());
+    const unsigned int channel_step = inpHeight * inpWidth;
     for (int i = 0; i < 3; ++i) {
-        std::memcpy(result.data() + i * 256 * 256, channels[i].data, 256 * 256 * sizeof(float));
+        std::memcpy(result.data() + i * channel_step, channels[i].data, channel_step * sizeof(float));
     }
 
     this->input_image_2 = result;
@@ -47,8 +48,9 @@ void BeautyGan::preprocess2(Mat image, Size& origin_size)
 
 cv::Mat BeautyGan::postprocess(float* output_data) {
     std::vector<cv::Mat> output_channels;
+    const unsigned int channel_step = outHeight * outWidth;
     for (int i = 0; i < 3; ++i) {
-        output_channels.emplace_back(256, 256, CV_32F, output_data + i * 256 * 256);
+        output_channels.emplace_back(outHeight, outWidth, CV_32F, output_data + i * channel_step);
     }
 
     cv::Mat output_img;
