@@ -184,7 +184,7 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 >
 > 链接: https://pan.baidu.com/s/10bIlCT08XPtUd_GBOGH6cw?pwd=xu4f
 > 
-> 链接: https://pan.baidu.com/s/1WESRpGUeHqiS5NOqQfb_Hw?pwd=jhhm
+> 链接: https://pan.baidu.com/s/1Qx-XemXvHHSpOYKeQGnDNg?pwd=irey
 >
 > 模型下载下来，存放在工程的 /models/ 目录下
 
