@@ -14,6 +14,9 @@
 #include "../../include/faceSwap/FaceSwap.h"
 #include "../../include/faceSwap/FaceEnhance.h"
 #include "../../include/faceSwap/Yolov8Face.h"
+#include "../../include/faceBeauty/BeautyGan.h"
+#include "../../include/faceBeauty/CodeFormer.h"
+#include "../../include/faceBeauty/FaceParsing.h"
 
 
 using namespace std;
@@ -27,6 +30,7 @@ public:
     Mat processFaceLandMark(Mat src);
     Mat processFaceSwap(Mat src, Mat target, bool status);
     Mat processCartoon(Mat src, int type);
+    Mat processBeauty(Mat src, Mat makeup);
 
 private:
     string modelPath;
@@ -44,6 +48,15 @@ private:
     std::unique_ptr<AnimeGAN>        animeGANPortraitSketch;
     std::unique_ptr<AnimeGAN>        animeGANShinkai;
     std::unique_ptr<AnimeGAN>        animeGANTinyCute;
+
+    std::unique_ptr<BeautyGan>       beautyGan;
+    std::unique_ptr<CodeFormer>      codeFormer;
+    std::unique_ptr<FaceParsing>     faceParsing;
+
+    cv::Mat blend_face_skin_region(const cv::Mat& codeformed_face,
+                                                   const cv::Mat& original_face,
+                                                   const cv::Mat& skin_mask,
+                                                   int feather_size = 15, double feather_sigma = 5.0);
 };
 
 #endif //MONICAIMAGEPROCESS_GLOBALRESOURCE_H

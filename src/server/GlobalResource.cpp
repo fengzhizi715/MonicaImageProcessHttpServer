@@ -69,6 +69,19 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     animeGANShinkai        = std::make_unique<AnimeGAN>(animeGANShinkaiModePath, animeGANShinkaiLogId.c_str(), provider);
     animeGANTinyCute       = std::make_unique<AnimeGAN>(animeGANTinyCuteModePath, animeGANTinyCuteLogId.c_str(), provider);
 
+
+    string beautyGanModePath = modelPath + "/beautygan.onnx";
+    string codeFormerModePath = modelPath + "/codeformer.onnx";
+    string faceParsingModePath = modelPath + "/face_parsing_resnet34.onnx";
+
+    const std::string& beautyGanLogId = "beautyGan";
+    const std::string& codeFormerLogId = "codeFormer";
+    const std::string& faceParsingLogId = "faceParsing";
+
+    BeautyGan beautyGan(beautyGanModePath,beautyGanLogId.c_str(), provider);
+    CodeFormer codeFormer(codeFormerModePath,codeFormerLogId.c_str(), provider);
+    FaceParsing faceParsing(faceParsingModePath,faceParsingLogId.c_str(), provider);
+
     // 初始化资源，加载模型文件
     PLOG(L_INFO) << "GlobalResource initialized." << std::endl;
 }
@@ -176,4 +189,73 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
     }
 
     return dst;
+}
+
+
+cv::Mat GlobalResource::blend_face_skin_region(const cv::Mat& codeformed_face,
+                                       const cv::Mat& original_face,
+                                       const cv::Mat& skin_mask,
+                                       int feather_size, double feather_sigma) {
+    CV_Assert(codeformed_face.size() == original_face.size());
+    CV_Assert(skin_mask.size() == original_face.size());
+    CV_Assert(codeformed_face.type() == original_face.type());
+    CV_Assert(skin_mask.type() == CV_8UC1);
+
+    // feather mask 边缘
+    cv::Mat blurred_mask;
+    if (feather_size > 0) {
+        cv::GaussianBlur(skin_mask, blurred_mask, cv::Size(feather_size, feather_size), feather_sigma);
+    } else {
+        blurred_mask = skin_mask.clone();
+    }
+
+    // 创建一个输出图像，初始为 original
+    cv::Mat blended = original_face.clone();
+
+    // 使用 mask 将 codeformed_face 拷贝到 blended 中
+    codeformed_face.copyTo(blended, blurred_mask);  // 只复制 mask!=0 的区域
+
+    return blended;
+}
+
+Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
+    PLOG(L_INFO) << "process Beauty..." << endl;
+
+    // 人脸检测与裁剪
+    Mat original_face;
+    Bbox box;
+    try {
+        vector<Bbox> boxes;
+        yolov8Face.get()->detect(src, boxes);
+        box = boxes[0];
+
+        original_face = src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax)));
+    } catch(...) {
+    }
+
+    // 查找人脸的关键点
+    vector<Point2f> face_landmark_5of68;
+    face68Landmarks.get()->detect(src, box, face_landmark_5of68);
+
+    // 美颜模型处理
+    Mat beautygan_crop;
+    beautyGan.get()->inferImage(original_face, makeup, beautygan_crop);
+
+    // 使用 CodeFormer 对人脸优化细节
+    Mat codeformed_face; // CodeFormer 输出的人脸
+    codeFormer.get()->inferImage(beautygan_crop, codeformed_face);
+    resize(codeformed_face, codeformed_face, original_face.size());
+
+    // 人脸解析与获取掩码
+    cv::Mat skin_mask;
+    faceParsing.get()->inferImage(codeformed_face, skin_mask);
+
+    // 通过掩码将处理后人脸融回原图
+    cv::resize(skin_mask, skin_mask, codeformed_face.size());
+    cv::Mat blended_face = blend_face_skin_region(codeformed_face, original_face, skin_mask);
+    blended_face.copyTo(src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax))));
+
+    // 最后再用 GFPGAN 模型对人脸进行增强
+    Mat result = faceEnhance.get()->process(src, face_landmark_5of68);
+    return result;
 }
