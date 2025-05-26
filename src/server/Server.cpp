@@ -18,6 +18,7 @@
 #include "../../include/server/HttpUtils.h"
 #include "../../include/server/Config.h"
 #include "../utils/json.hpp"
+#include "../utils/aixlog.hpp"
 
 namespace po = boost::program_options;
 namespace beast = boost::beast;
@@ -184,6 +185,24 @@ private:
                     res.prepare_payload();
                     do_write(res);
                 }
+            } else if (target == "/api/faceBeauty") {
+
+                // 解析 multipart/form-data
+                auto parts = parseMultipartFormDataManual(req_);
+                if (parts.find("src") == parts.end() || parts.find("makeup") == parts.end()) {
+                    throw std::runtime_error("Missing images in request.");
+                }
+
+                Mat src = binaryToCvMat(parts["src"]);
+                Mat makeup = binaryToCvMat(parts["makeup"]);
+                Mat dst = globalResource_.get()->processBeauty(src, makeup);
+                std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+
+                http::response<http::string_body> res{http::status::ok, req_.version()};
+                res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+                res.body() = std::move(encodedImage);
+                res.prepare_payload();
+                do_write(res);
             }
         } else {
             // 其他接口返回 404

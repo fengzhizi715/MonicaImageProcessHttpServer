@@ -78,9 +78,9 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     const std::string& codeFormerLogId = "codeFormer";
     const std::string& faceParsingLogId = "faceParsing";
 
-    BeautyGan beautyGan(beautyGanModePath,beautyGanLogId.c_str(), provider);
-    CodeFormer codeFormer(codeFormerModePath,codeFormerLogId.c_str(), provider);
-    FaceParsing faceParsing(faceParsingModePath,faceParsingLogId.c_str(), provider);
+    beautyGan      = std::make_unique<BeautyGan>(beautyGanModePath,beautyGanLogId.c_str(), provider);
+    codeFormer     = std::make_unique<CodeFormer>(codeFormerModePath,codeFormerLogId.c_str(), provider);
+    faceParsing    = std::make_unique<FaceParsing>(faceParsingModePath,faceParsingLogId.c_str(), provider);
 
     // 初始化资源，加载模型文件
     PLOG(L_INFO) << "GlobalResource initialized." << std::endl;
