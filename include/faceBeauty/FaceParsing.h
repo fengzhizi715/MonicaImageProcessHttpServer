@@ -19,6 +19,9 @@ public:
 
 private:
     void preprocess(Mat src);
+    Mat getLabelMap(float* output_data, int num_classes, int height, int width);
+    Mat getCombinedMask(const Mat& label_map, const std::vector<int>& label_values);
+
     vector<float> input_image_;
 
     int inpWidth;
