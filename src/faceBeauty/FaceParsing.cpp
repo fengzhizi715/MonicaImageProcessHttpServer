@@ -7,8 +7,6 @@ FaceParsing::FaceParsing(std::string modelPath, const char* logId, const char* p
 {
     this->inpHeight = input_node_dims[0][2];
     this->inpWidth = input_node_dims[0][3];
-    this->outHeight = output_node_dims[0][2];
-    this->outWidth = output_node_dims[0][3];
 }
 
 void FaceParsing::preprocess(Mat src)

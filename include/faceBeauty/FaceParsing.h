@@ -26,8 +26,6 @@ private:
 
     int inpWidth;
     int inpHeight;
-    int outWidth;
-    int outHeight;
 };
 
 #endif //MONICAIMAGEPROCESSHTTPSERVER_FACEPARSING_H
