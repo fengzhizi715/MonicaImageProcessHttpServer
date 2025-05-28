@@ -192,32 +192,6 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
 }
 
 
-cv::Mat GlobalResource::blend_face_skin_region(const cv::Mat& codeformed_face,
-                                       const cv::Mat& original_face,
-                                       const cv::Mat& skin_mask,
-                                       int feather_size, double feather_sigma) {
-    CV_Assert(codeformed_face.size() == original_face.size());
-    CV_Assert(skin_mask.size() == original_face.size());
-    CV_Assert(codeformed_face.type() == original_face.type());
-    CV_Assert(skin_mask.type() == CV_8UC1);
-
-    // feather mask 边缘
-    cv::Mat blurred_mask;
-    if (feather_size > 0) {
-        cv::GaussianBlur(skin_mask, blurred_mask, cv::Size(feather_size, feather_size), feather_sigma);
-    } else {
-        blurred_mask = skin_mask.clone();
-    }
-
-    // 创建一个输出图像，初始为 original
-    cv::Mat blended = original_face.clone();
-
-    // 使用 mask 将 codeformed_face 拷贝到 blended 中
-    codeformed_face.copyTo(blended, blurred_mask);  // 只复制 mask!=0 的区域
-
-    return blended;
-}
-
 Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     PLOG(L_INFO) << "process Beauty..." << endl;
 
@@ -237,6 +211,10 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     vector<Point2f> face_landmark_5of68;
     face68Landmarks.get()->detect(src, box, face_landmark_5of68);
 
+    // 人脸解析与获取掩码
+    cv::Mat skin_mask;
+    faceParsing.get()->inferImage(original_face, skin_mask);
+
     // 美颜模型处理
     Mat beautygan_crop;
     beautyGan.get()->inferImage(original_face, makeup, beautygan_crop);
@@ -246,13 +224,11 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     codeFormer.get()->inferImage(beautygan_crop, codeformed_face);
     resize(codeformed_face, codeformed_face, original_face.size());
 
-    // 人脸解析与获取掩码
-    cv::Mat skin_mask;
-    faceParsing.get()->inferImage(codeformed_face, skin_mask);
-
     // 通过掩码将处理后人脸融回原图
     cv::resize(skin_mask, skin_mask, codeformed_face.size());
-    cv::Mat blended_face = blend_face_skin_region(codeformed_face, original_face, skin_mask);
+    Point center(original_face.cols/2, original_face.rows/2);
+    cv::Mat blended_face;
+    cv::seamlessClone(codeformed_face, original_face, skin_mask, center, blended_face, NORMAL_CLONE);
     blended_face.copyTo(src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax))));
 
     // 最后再用 GFPGAN 模型对人脸进行增强
