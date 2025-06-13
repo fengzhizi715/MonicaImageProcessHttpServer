@@ -191,7 +191,7 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
     return dst;
 }
 
-
+// 美颜增强流水线: YOLOv8 -> Face Parsing -> BeautyGAN -> CodeFormer -> Mask 融合回原图
 Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     PLOG(L_INFO) << "process Beauty..." << endl;
 
