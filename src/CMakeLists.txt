@@ -48,16 +48,9 @@ else()
     set(ENABLE_CUDA OFF)
 endif()
 
-
-if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
-    # 指定ONNX Runtime的路径
-    set(ONNXRUNTIME_ROOT "/Users/Tony/onnxruntime/onnxruntime-osx-x86_64-1.10.0")
-    # 包含ONNX Runtime头文件
-    include_directories(${ONNXRUNTIME_ROOT}/include/)
-    # 查找ONNX Runtime库文件
-    find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
-
-    add_executable(${PROJECT_NAME} server/main.cpp
+# 定义源文件清单
+set(SRC_FILES
+        server/main.cpp
         ../include/server/GlobalResource.h          server/GlobalResource.cpp
         ../include/server/HttpUtils.h               server/HttpUtils.cpp
                                                     server/Server.cpp
@@ -76,7 +69,17 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
         ../include/utils/Timer.h                    utils/Timer.cpp
         ../include/utils/Utils.h                    utils/Utils.cpp
         ../include/server/Config.h                  utils/aixlog.hpp
-                                                    utils/json.hpp)
+        utils/json.hpp)
+
+if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
+    # 指定ONNX Runtime的路径
+    set(ONNXRUNTIME_ROOT "/Users/Tony/onnxruntime/onnxruntime-osx-x86_64-1.10.0")
+    # 包含ONNX Runtime头文件
+    include_directories(${ONNXRUNTIME_ROOT}/include/)
+    # 查找ONNX Runtime库文件
+    find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
+
+    add_executable(${PROJECT_NAME} ${SRC_FILES})
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
@@ -93,26 +96,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${ARM64_PROJECT_NAME} server/main.cpp
-            ../include/server/GlobalResource.h          server/GlobalResource.cpp
-            ../include/server/HttpUtils.h               server/HttpUtils.cpp
-                                                        server/Server.cpp
-            ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
-            ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
-            ../include/faceBeauty/BeautyGan.h           faceBeauty/BeautyGan.cpp
-            ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
-            ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
-            ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
-            ../include/faceSwap/Face68Landmarks.h       faceSwap/Face68Landmarks.cpp
-            ../include/faceSwap/FaceEmbedding.h         faceSwap/FaceEmbedding.cpp
-            ../include/faceSwap/FaceSwap.h              faceSwap/FaceSwap.cpp
-            ../include/faceSwap/FaceEnhance.h           faceSwap/FaceEnhance.cpp
-            ../include/cartoon/AnimeGAN.h               cartoon/AnimeGAN.cpp
-            ../include/onnxruntime/OnnxRuntimeBase.h    onnxruntime/OnnxRuntimeBase.cpp
-            ../include/utils/Timer.h                    utils/Timer.cpp
-            ../include/utils/Utils.h                    utils/Utils.cpp
-            ../include/server/Config.h                  utils/aixlog.hpp
-                                                        utils/json.hpp)
+    add_executable(${ARM64_PROJECT_NAME} ${SRC_FILES})
 
     target_link_libraries(${ARM64_PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${ARM64_PROJECT_NAME} ${Boost_LIBRARIES})
@@ -133,26 +117,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${LINUX_PROJECT_NAME} server/main.cpp
-            ../include/server/GlobalResource.h          server/GlobalResource.cpp
-            ../include/server/HttpUtils.h               server/HttpUtils.cpp
-                                                        server/Server.cpp
-            ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
-            ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
-            ../include/faceBeauty/BeautyGan.h           faceBeauty/BeautyGan.cpp
-            ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
-            ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
-            ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp
-            ../include/faceSwap/Face68Landmarks.h       faceSwap/Face68Landmarks.cpp
-            ../include/faceSwap/FaceEmbedding.h         faceSwap/FaceEmbedding.cpp
-            ../include/faceSwap/FaceSwap.h              faceSwap/FaceSwap.cpp
-            ../include/faceSwap/FaceEnhance.h           faceSwap/FaceEnhance.cpp
-            ../include/cartoon/AnimeGAN.h               cartoon/AnimeGAN.cpp
-            ../include/onnxruntime/OnnxRuntimeBase.h    onnxruntime/OnnxRuntimeBase.cpp
-            ../include/utils/Timer.h                    utils/Timer.cpp
-            ../include/utils/Utils.h                    utils/Utils.cpp
-            ../include/server/Config.h                  utils/aixlog.hpp
-                                                        utils/json.hpp)
+    add_executable(${LINUX_PROJECT_NAME} ${SRC_FILES})
 
     if(ENABLE_CUDA)
         target_compile_definitions(${LINUX_PROJECT_NAME} PRIVATE USE_GPU)
