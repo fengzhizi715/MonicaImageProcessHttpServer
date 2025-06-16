@@ -37,8 +37,7 @@ void SketchDrawing::inferImage(Mat& src, Mat& dst)
     }
     array<int64_t, 4> input_shape_{ 1, 3, this->inpHeight, this->inpWidth };
 
-    auto allocator_info = MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
-    Value input_tensor_ = Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
+    Value input_tensor_ = Value::CreateTensor<float>(memory_info_handler, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
     preprocessTimer.stop();
 
     Timer inferenceTimer = Timer(inferenceTime, true);

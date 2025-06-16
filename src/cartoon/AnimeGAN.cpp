@@ -49,8 +49,7 @@ void AnimeGAN::inferImage(Mat& src, Mat& dst)
     std::vector<float> input_tensor_values = prepare_input_nhwc(temp);
     std::array<int64_t, 4> input_shape = {1, temp.rows, temp.cols, 3};
 
-    Ort::MemoryInfo allocator_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-    Ort::Value input_tensor_ = Ort::Value::CreateTensor<float>(allocator_info, input_tensor_values.data(), input_tensor_values.size(), input_shape.data(), input_shape.size());
+    Ort::Value input_tensor_ = Ort::Value::CreateTensor<float>(memory_info_handler, input_tensor_values.data(), input_tensor_values.size(), input_shape.data(), input_shape.size());
 
     vector<Value> ort_outputs = this -> forward(input_tensor_);
 

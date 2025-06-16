@@ -66,9 +66,7 @@ void FaceParsing::inferImage(Mat& src, Mat& dst) {
     this->preprocess(src);
     std::array<int64_t,4> input_shape {1,3,this->inpHeight, this->inpWidth};
 
-    Ort::MemoryInfo allocator_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-
-    Ort::Value input_tensor_ = Ort::Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape.data(), input_shape.size());
+    Ort::Value input_tensor_ = Ort::Value::CreateTensor<float>(memory_info_handler, input_image_.data(), input_image_.size(), input_shape.data(), input_shape.size());
 
     vector<Value> ort_outputs = this -> forward(input_tensor_);
 

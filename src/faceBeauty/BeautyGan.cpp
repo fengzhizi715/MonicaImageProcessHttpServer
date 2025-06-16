@@ -51,11 +51,10 @@ void BeautyGan::inferImage(Mat& src, Mat makeup, Mat& dst) {
 
     std::array<int64_t,4> input_shape {1,3,this->inpHeight, this->inpWidth};
 
-    auto allocator_info = MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
     vector<Value> ort_inputs;
 
-    ort_inputs.push_back(Value::CreateTensor<float>(allocator_info, input_image_1.data(), input_image_1.size(), input_shape.data(), input_shape.size()));
-    ort_inputs.push_back(Value::CreateTensor<float>(allocator_info, input_image_2.data(), input_image_2.size(), input_shape.data(), input_shape.size()));
+    ort_inputs.push_back(Value::CreateTensor<float>(memory_info_handler, input_image_1.data(), input_image_1.size(), input_shape.data(), input_shape.size()));
+    ort_inputs.push_back(Value::CreateTensor<float>(memory_info_handler, input_image_2.data(), input_image_2.size(), input_shape.data(), input_shape.size()));
     vector<Value> ort_outputs = this -> forward(ort_inputs);
 
     // 后处理
