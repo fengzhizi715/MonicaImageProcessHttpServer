@@ -28,7 +28,7 @@ cv::Mat Modnet::postprocess(float* output_data, int width, int height) {
     return alpha.clone();
 }
 
-void Modnet::inferImage(Mat& src, Mat& dst) {
+void Modnet::inferImage(Mat& src, Mat& mask) {
     this->preprocess(src);
     std::array<int64_t,4> input_shape {1,3, this->inpHeight, this->inpWidth};
 
@@ -42,5 +42,5 @@ void Modnet::inferImage(Mat& src, Mat& dst) {
     cv::resize(alpha, alpha, src.size());                // 缩放到原图尺寸
     alpha.convertTo(alpha, CV_32FC1);                    // 确保是 float32 类型
 
-    dst = alpha;
+    mask = alpha;
 }

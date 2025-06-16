@@ -15,7 +15,7 @@ class Modnet: public OnnxRuntimeBase {
 public:
     Modnet(std::string modelPath, const char* logId, const char* provider);
 
-    void inferImage(Mat& src, Mat& dst);
+    void inferImage(Mat& src, Mat& mask);
 
 private:
     void preprocess(const cv::Mat& image);
