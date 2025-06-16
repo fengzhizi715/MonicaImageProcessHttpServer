@@ -17,7 +17,7 @@ void Modnet::preprocess(const cv::Mat& image) {
 
     for (int c = 0; c < 3; ++c)
         for (int h = 0; h < this->inpHeight; ++h)
-            for (int w = 0; w < float_img.cols; ++w)
+            for (int w = 0; w < this->inpWidth; ++w)
                 this->input_image_[c * this->inpHeight * this->inpWidth + h * this->inpWidth + w] = float_img.at<cv::Vec3f>(h, w)[c];
 }
 
@@ -32,9 +32,7 @@ void Modnet::inferImage(Mat& src, Mat& dst) {
     this->preprocess(src);
     std::array<int64_t,4> input_shape {1,3, this->inpHeight, this->inpWidth};
 
-    Ort::MemoryInfo allocator_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-
-    Ort::Value input_tensor_ = Ort::Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape.data(), input_shape.size());
+    Ort::Value input_tensor_ = Ort::Value::CreateTensor<float>(memory_info_handler, input_image_.data(), input_image_.size(), input_shape.data(), input_shape.size());
 
     vector<Value> ort_outputs = this -> forward(input_tensor_);
 
