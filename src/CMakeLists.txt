@@ -81,9 +81,10 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
 
     add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
-    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
-    target_link_libraries(${PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
+    target_link_libraries(${PROJECT_NAME}
+            ${OpenCV_LIBS}
+            ${Boost_LIBRARIES}
+            ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
     # Mac M 芯片打包的应用名称
@@ -98,9 +99,10 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
 
     add_executable(${ARM64_PROJECT_NAME} ${SRC_FILES})
 
-    target_link_libraries(${ARM64_PROJECT_NAME} ${OpenCV_LIBS})
-    target_link_libraries(${ARM64_PROJECT_NAME} ${Boost_LIBRARIES})
-    target_link_libraries(${ARM64_PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
+    target_link_libraries(${ARM64_PROJECT_NAME}
+            ${OpenCV_LIBS}
+            ${Boost_LIBRARIES}
+            ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "Linux")
     set(LINUX_PROJECT_NAME "MonicaImageProcessHttpServerForLinux")
@@ -123,7 +125,8 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
         target_compile_definitions(${LINUX_PROJECT_NAME} PRIVATE USE_GPU)
     endif()
 
-    target_link_libraries(${LINUX_PROJECT_NAME} ${OpenCV_LIBS})
-    target_link_libraries(${LINUX_PROJECT_NAME} ${Boost_LIBRARIES})
-    target_link_libraries(${LINUX_PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.so.1.10.0)
+    target_link_libraries(${LINUX_PROJECT_NAME}
+            ${OpenCV_LIBS}
+            ${Boost_LIBRARIES}
+            ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.so.1.10.0)
 endif()
