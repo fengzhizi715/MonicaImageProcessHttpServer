@@ -17,6 +17,8 @@ public:
 
     void inferImage(Mat& src, Mat& mask);
 
+    void changeBackground(Mat src, Mat background, Mat& dst);
+
 private:
     void preprocess(const cv::Mat& image);
     Mat postprocess(float* output_data, int width, int height);

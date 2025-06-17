@@ -44,3 +44,33 @@ void Modnet::inferImage(Mat& src, Mat& mask) {
 
     mask = alpha;
 }
+
+void Modnet::changeBackground(Mat src, Mat background, Mat& dst) {
+    Mat alpha;
+    this->inferImage(src, alpha);
+
+    cv::Mat alpha_3ch;
+    cv::merge(std::vector<cv::Mat>{alpha, alpha, alpha}, alpha_3ch);
+    alpha_3ch.convertTo(alpha_3ch, CV_32FC3);  // 转成 float32 三通道
+
+    // 转换原图和背景为 float
+    cv::Mat image_f, bg_f;
+    src.convertTo(image_f, CV_32FC3, 1.0 / 255.0);
+    cv::resize(background, background, src.size());
+    background.convertTo(bg_f, CV_32FC3, 1.0 / 255.0);
+
+    // 计算 1 - alpha
+    cv::Mat one_minus_alpha;
+    cv::subtract(1.0, alpha_3ch, one_minus_alpha, cv::noArray(), CV_32FC3);
+
+    // alpha blending
+    cv::Mat fg_part = image_f.mul(alpha_3ch);           // 前景
+    cv::Mat bg_part = bg_f.mul(one_minus_alpha);        // 背景
+    cv::Mat blended_f;
+    cv::add(fg_part, bg_part, blended_f);               // 混合结果（float）
+
+    // 转回 8bit
+    cv::Mat blended;
+    blended_f.convertTo(blended, CV_8UC3, 255.0);
+    dst = blended;
+}
