@@ -192,5 +192,5 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 # 五. TODO List:
 
 * 人脸美颜的服务
-* 统一代码风格
 * ONNXRuntime 版本升级
+* 计算每个接口的耗时
