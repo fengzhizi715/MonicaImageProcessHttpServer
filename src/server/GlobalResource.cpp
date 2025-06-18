@@ -240,3 +240,11 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     Mat result = faceEnhance.get()->process(src, face_landmark_5of68);
     return result;
 }
+
+Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
+    PLOG(L_INFO) << "process change person background..." << endl;
+
+    Mat dst;
+    modnet.get()->changeBackground(src,background,dst);
+    return dst;
+}

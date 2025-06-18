@@ -181,7 +181,7 @@ private:
                 } catch (const std::exception& e) {
                     http::response<http::string_body> res{http::status::bad_request, req_.version()};
                     res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
-                    res.body() = "Error processing face swap: " + std::string(e.what());
+                    res.body() = "Error processing cartoon: " + std::string(e.what());
                     res.prepare_payload();
                     do_write(res);
                 }
@@ -196,6 +196,24 @@ private:
                 Mat src = binaryToCvMat(parts["src"]);
                 Mat makeup = binaryToCvMat(parts["makeup"]);
                 Mat dst = globalResource_.get()->processBeauty(src, makeup);
+                std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+
+                http::response<http::string_body> res{http::status::ok, req_.version()};
+                res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+                res.body() = std::move(encodedImage);
+                res.prepare_payload();
+                do_write(res);
+            } else if (target == "/api/changePersonBackground") {
+
+                // 解析 multipart/form-data
+                auto parts = parseMultipartFormDataManual(req_);
+                if (parts.find("src") == parts.end() || parts.find("background") == parts.end()) {
+                    throw std::runtime_error("Missing images in request.");
+                }
+
+                Mat src = binaryToCvMat(parts["src"]);
+                Mat background = binaryToCvMat(parts["background"]);
+                Mat dst = globalResource_.get()->processPersonBackground(src, background);
                 std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
 
                 http::response<http::string_body> res{http::status::ok, req_.version()};
