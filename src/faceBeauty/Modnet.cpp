@@ -56,7 +56,12 @@ void Modnet::changeBackground(Mat src, Mat background, Mat& dst) {
     // 转换原图和背景为 float
     cv::Mat image_f, bg_f;
     src.convertTo(image_f, CV_32FC3, 1.0 / 255.0);
-    cv::resize(background, background, src.size());
+
+    if (background.empty()) {
+        background = Mat(src.size(), CV_8UC3, cv::Scalar(0, 0, 0));
+    } else {
+        cv::resize(background, background, src.size());
+    }
     background.convertTo(bg_f, CV_32FC3, 1.0 / 255.0);
 
     // 计算 1 - alpha

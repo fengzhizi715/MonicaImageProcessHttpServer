@@ -17,6 +17,12 @@ public:
 
     void inferImage(Mat& src, Mat& mask);
 
+    /**
+     * 替换人物的背景
+     * @param src
+     * @param background
+     * @param dst
+     */
     void changeBackground(Mat src, Mat background, Mat& dst);
 
 private:
