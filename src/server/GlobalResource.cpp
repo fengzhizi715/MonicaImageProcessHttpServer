@@ -82,6 +82,11 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     codeFormer     = std::make_unique<CodeFormer>(codeFormerModePath,codeFormerLogId.c_str(), provider);
     faceParsing    = std::make_unique<FaceParsing>(faceParsingModePath,faceParsingLogId.c_str(), provider);
 
+    string modnetModePath = modelPath + "/modnet.onnx";
+
+    const std::string& modnetLogId = "modnet";
+    modnet         = std::make_unique<Modnet>(modnetModePath,modnetLogId.c_str(), provider);
+
     // 初始化资源，加载模型文件
     PLOG(L_INFO) << "GlobalResource initialized." << std::endl;
 }

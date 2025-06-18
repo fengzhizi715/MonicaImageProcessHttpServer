@@ -57,6 +57,7 @@ set(SRC_FILES
         ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
         ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
         ../include/faceBeauty/BeautyGan.h           faceBeauty/BeautyGan.cpp
+        ../include/faceBeauty/Modnet.h              faceBeauty/Modnet.cpp
         ../include/sketchDrawing/SketchDrawing.h    sketchDrawing/SketchDrawing.cpp
         ../include/faceDetect/FaceDetect.h          faceDetect/FaceDetect.cpp
         ../include/faceSwap/Yolov8Face.h            faceSwap/Yolov8Face.cpp

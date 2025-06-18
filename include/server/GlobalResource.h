@@ -17,6 +17,7 @@
 #include "../../include/faceBeauty/BeautyGan.h"
 #include "../../include/faceBeauty/CodeFormer.h"
 #include "../../include/faceBeauty/FaceParsing.h"
+#include "../../include/faceBeauty/Modnet.h"
 
 
 using namespace std;
@@ -31,6 +32,7 @@ public:
     Mat processFaceSwap(Mat src, Mat target, bool status);
     Mat processCartoon(Mat src, int type);
     Mat processBeauty(Mat src, Mat makeup);
+    Mat processPersonBackground(Mat src, Mat background);
 
 private:
     string modelPath;
@@ -52,6 +54,8 @@ private:
     std::unique_ptr<BeautyGan>       beautyGan;
     std::unique_ptr<CodeFormer>      codeFormer;
     std::unique_ptr<FaceParsing>     faceParsing;
+
+    std::unique_ptr<Modnet>          modnet;
 };
 
 #endif //MONICAIMAGEPROCESS_GLOBALRESOURCE_H
