@@ -78,27 +78,11 @@ void FaceParsing::inferImage(Mat& src, Mat& dst) {
     // Argmax 得到 class_idx (CV_8UC1)
     int H=512, W=512, C=19;
     dst = getLabelMap(out_data,C,H,W);
-
-//    // 提取“皮肤”区域作为人脸轮廓基础 (类别ID=1)
-//    cv::Mat mask = (class_idx==1);
-//
-//    // 形态学闭运算：填补小孔、平滑边界
-//    int ksize = 25;
-//    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ksize, ksize));
-//    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel);
-//
-//    // 提取并绘制外轮廓
-//    std::vector<std::vector<cv::Point>> contours;
-//    cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-//    cv::Mat contour_mask = cv::Mat::zeros(mask.size(), CV_8UC1);
-//    cv::drawContours(contour_mask, contours, -1, cv::Scalar(255), cv::FILLED);
-//
-//    dst = contour_mask;
 }
 
-void FaceParsing::getSkinMask(Mat& parsing_result, Mat& dst) {
+void FaceParsing::getSkinMask(Mat& label_map, Mat& dst) {
     // 提取“皮肤”区域作为人脸轮廓基础 (类别ID=1)
-    cv::Mat mask = (parsing_result==1);
+    cv::Mat mask = (label_map==1);
 
     // 形态学闭运算：填补小孔、平滑边界
     int ksize = 25;

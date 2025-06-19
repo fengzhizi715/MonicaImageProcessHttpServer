@@ -24,7 +24,7 @@ public:
 
     Mat getCombinedMask(const Mat& label_map, const std::vector<int>& label_values);
 
-    void getSkinMask(Mat& parsing_result, Mat& dst);
+    void getSkinMask(Mat& label_map, Mat& dst);
 
 private:
     void preprocess(Mat src);
