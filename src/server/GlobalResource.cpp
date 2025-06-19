@@ -217,8 +217,9 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     face68Landmarks.get()->detect(src, box, face_landmark_5of68);
 
     // 人脸解析与获取掩码
-    cv::Mat skin_mask;
-    faceParsing.get()->inferImage(original_face, skin_mask);
+    cv::Mat parsing_result, skin_mask;
+    faceParsing.get()->inferImage(original_face, parsing_result);
+    faceParsing.get()->getSkinMask(parsing_result, skin_mask);
 
     // 美颜模型处理
     Mat beautygan_crop;

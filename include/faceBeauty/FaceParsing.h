@@ -15,9 +15,16 @@ class FaceParsing: public OnnxRuntimeBase {
 public:
     FaceParsing(std::string modelPath, const char* logId, const char* provider);
 
+    /**
+     * 通过推理获取人脸的 parsing
+     * @param src
+     * @param dst
+     */
     void inferImage(Mat& src, Mat& dst);
 
     Mat getCombinedMask(const Mat& label_map, const std::vector<int>& label_values);
+
+    void getSkinMask(Mat& parsing_result, Mat& dst);
 
 private:
     void preprocess(Mat src);
