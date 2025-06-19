@@ -97,3 +97,24 @@ void FaceParsing::getSkinMask(Mat& label_map, Mat& dst) {
 
     dst = contour_mask;
 }
+
+Mat FaceParsing::getSemanticSegmentationMask(Mat src, Mat label_map) {
+
+    int H = label_map.cols;
+    int W = label_map.rows;
+
+    // 生成彩色掩码
+    cv::Mat mask_color(H, W, CV_8UC3);
+    for (int h = 0; h < H; ++h) {
+        for (int w = 0; w < W; ++w) {
+            uchar cid = label_map.at<uchar>(h, w);
+            mask_color.at<cv::Vec3b>(h, w) = palette[cid];
+        }
+    }
+
+    cv::resize(mask_color, mask_color, src.size());
+    cv::Mat overlay;
+    double alpha = 0.6;
+    cv::addWeighted(src, alpha, mask_color, 1 - alpha, 0, overlay);
+    return overlay;
+}

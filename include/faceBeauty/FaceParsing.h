@@ -26,6 +26,14 @@ public:
 
     void getSkinMask(Mat& label_map, Mat& dst);
 
+    /**
+     * 获取语义分割的 mask
+     * @param src
+     * @param label_map
+     * @return
+     */
+    Mat getSemanticSegmentationMask(Mat src, Mat label_map);
+
 private:
     void preprocess(Mat src);
     Mat getLabelMap(float* output_data, int num_classes, int height, int width);
