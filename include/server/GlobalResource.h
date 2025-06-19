@@ -33,6 +33,7 @@ public:
     Mat processCartoon(Mat src, int type);
     Mat processBeauty(Mat src, Mat makeup);
     Mat processPersonBackground(Mat src, Mat background);
+    Mat changeHairColor(Mat src, int target_hue, float saturation_scale);
 
 private:
     string modelPath;

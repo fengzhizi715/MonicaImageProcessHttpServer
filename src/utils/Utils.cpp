@@ -140,3 +140,88 @@ Mat blend_frame(Mat temp_vision_frame, Mat paste_vision_frame, const int FACE_EN
     cv::addWeighted(temp_vision_frame, face_enhancer_blend, paste_vision_frame, 1 - face_enhancer_blend, 0, dst);
     return dst;
 }
+
+/**
+ * 基于 alpha mask 裁剪人像 ROI，还要兼顾长发女生的情况
+ * @param alpha
+ * @param threshold
+ * @param expand
+ * @return
+ */
+cv::Rect getSmartFaceROIFromAlpha(const cv::Mat& alpha, float threshold, int expand) {
+    // 二值化
+    cv::Mat binary_mask;
+    cv::threshold(alpha, binary_mask, threshold, 255.0, cv::THRESH_BINARY);
+    binary_mask.convertTo(binary_mask, CV_8UC1);
+
+    // 获取图像高度用于判断“顶部区域”
+    int height = binary_mask.rows;
+    int width = binary_mask.cols;
+    int top_cutoff = height * 2 / 3;  // 只保留上 2/3 的区域
+    cv::Mat top_mask = binary_mask(cv::Rect(0, 0, width, top_cutoff));
+
+    // 轮廓提取（上部区域）
+    std::vector<std::vector<cv::Point>> contours;
+    cv::findContours(top_mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    if (contours.empty()) {
+        return cv::Rect(0, 0, width, height); // fallback
+    }
+
+    // 合并有效轮廓为矩形框
+    cv::Rect face_rect = cv::boundingRect(contours[0]);
+    for (size_t i = 1; i < contours.size(); ++i) {
+        cv::Rect r = cv::boundingRect(contours[i]);
+
+        float aspect = r.width / (float)r.height;
+        if (r.area() < 500 || aspect > 3.0f) continue;  // 过滤宽高比过大的杂散区域
+
+        face_rect |= r;  // 合并
+    }
+
+    // 向外扩展
+    face_rect.x = std::max(face_rect.x - expand, 0);
+    face_rect.y = std::max(face_rect.y - expand, 0);
+    face_rect.width = std::min(face_rect.width + 2 * expand, width - face_rect.x);
+    face_rect.height = std::min(face_rect.height + 2 * expand, height - face_rect.y);
+
+    return face_rect;
+}
+
+cv::Mat changeHairColor_HSV(
+        const cv::Mat& image,
+        const cv::Mat& hair_mask,  // CV_8UC1, 255 for hair
+        int target_hue,            // 0-179, OpenCV H 值
+        float saturation_scale     // 控制染色鲜艳度
+) {
+    CV_Assert(image.type() == CV_8UC3 && hair_mask.type() == CV_8UC1);
+
+    cv::Mat image_hsv;
+    cv::cvtColor(image, image_hsv, cv::COLOR_BGR2HSV); // 转 HSV
+
+    std::vector<cv::Mat> hsv_channels;
+    cv::split(image_hsv, hsv_channels); // 分离 H/S/V
+
+    // 仅替换头发区域的 H 通道
+    for (int y = 0; y < hair_mask.rows; ++y) {
+        for (int x = 0; x < hair_mask.cols; ++x) {
+            if (hair_mask.at<uchar>(y, x) > 128) {
+                hsv_channels[0].at<uchar>(y, x) = target_hue;
+                hsv_channels[1].at<uchar>(y, x) = cv::saturate_cast<uchar>(
+                        hsv_channels[1].at<uchar>(y, x) * saturation_scale
+                );
+            }
+        }
+    }
+
+    // 合并回 HSV，转换为 BGR
+    cv::merge(hsv_channels, image_hsv);
+    cv::Mat recolored_bgr;
+    cv::cvtColor(image_hsv, recolored_bgr, cv::COLOR_HSV2BGR);
+
+    // 仅复制头发区域
+    cv::Mat final_result = image.clone();
+    recolored_bgr.copyTo(final_result, hair_mask);
+
+    return final_result;
+}

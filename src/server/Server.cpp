@@ -221,6 +221,32 @@ private:
                 res.body() = std::move(encodedImage);
                 res.prepare_payload();
                 do_write(res);
+            } else if (target.find("/api/changeHairColor") == 0) {
+                // 使用 parse_relative_ref 解析路径 + 查询参数
+                auto targetRes = boost::urls::parse_relative_ref(target);
+                if (!targetRes) {
+                    std::cerr << "URL parsing failed: " << targetRes.error().message() << std::endl;
+                    return;
+                }
+
+                boost::urls::url_view url_view = targetRes.value();
+                int hue_param = 0;  // 默认值
+                // 正确的参数获取方式
+                auto params = url_view.params();
+                if (auto it = params.find("targetHue"); it != params.end()) {
+                    auto value = (*it).value;
+                    hue_param = std::stoi(value);
+                }
+
+                Mat src = requestBodyToCvMat(req_);
+                Mat dst = globalResource_->changeHairColor(src, hue_param, 1.3f);
+                std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+
+                http::response<http::string_body> res{http::status::ok, req_.version()};
+                res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+                res.body() = std::move(encodedImage);
+                res.prepare_payload();
+                do_write(res);
             }
         } else {
             // 其他接口返回 404

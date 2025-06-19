@@ -249,3 +249,32 @@ Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
     modnet.get()->changeBackground(src,background,dst);
     return dst;
 }
+
+Mat GlobalResource::changeHairColor(Mat src, int target_hue, float saturation_scale) {
+    PLOG(L_INFO) << "process change hair color..." << endl;
+
+    Mat mask;
+    modnet.get()->inferImage(src, mask);
+
+    cv::Rect face_roi = getSmartFaceROIFromAlpha(mask);
+    cv::Mat face_crop = src(face_roi).clone();
+
+    // 人脸解析与获取掩码
+    cv::Mat class_idx;
+    faceParsing.get()->inferImage(face_crop, class_idx);
+
+    // 提取头发区域的 mask
+    cv::Mat hair_mask_small = (class_idx == 17);
+    hair_mask_small.convertTo(hair_mask_small, CV_8UC1, 255);
+
+    // Resize 回 ROI 尺寸
+    cv::Mat hair_mask_roi;
+    cv::resize(hair_mask_small, hair_mask_roi, face_roi.size(), 0, 0, cv::INTER_NEAREST);
+
+    // 映射回原图尺寸
+    cv::Mat hair_mask = cv::Mat::zeros(src.size(), CV_8UC1);
+    hair_mask_roi.copyTo(hair_mask(face_roi));
+
+    cv::Mat recolored = changeHairColor_HSV(src, hair_mask, target_hue, saturation_scale);
+    return recolored;
+}

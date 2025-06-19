@@ -36,4 +36,13 @@ cv::Mat paste_back(cv::Mat temp_vision_frame, cv::Mat crop_vision_frame, cv::Mat
 
 cv::Mat blend_frame(cv::Mat temp_vision_frame, cv::Mat paste_vision_frame, const int FACE_ENHANCER_BLEND=80);
 
+cv::Rect getSmartFaceROIFromAlpha(const cv::Mat& alpha, float threshold = 0.1, int expand = 40);
+
+cv::Mat changeHairColor_HSV(
+        const cv::Mat& image,
+        const cv::Mat& hair_mask,  // CV_8UC1, 255 for hair
+        int target_hue,            // 0-179, OpenCV H 值
+        float saturation_scale = 1.2f // 控制染色鲜艳度
+);
+
 #endif //MONICAIMAGEPROCESS_UTILS_H
