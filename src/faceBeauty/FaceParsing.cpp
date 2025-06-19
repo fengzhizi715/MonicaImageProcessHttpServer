@@ -25,7 +25,6 @@ void FaceParsing::preprocess(Mat src)
                 this->input_image_.push_back(dst.at<cv::Vec3f>(h,w)[c]);
 }
 
-
 // 解析 output_data 得到 label_map，便于未来可以提取更多比如 眼睛、嘴巴、鼻子 等等
 Mat FaceParsing::getLabelMap(float* output_data, int num_classes, int height, int width) {
     Mat label_map(height, width, CV_8UC1);

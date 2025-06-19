@@ -17,15 +17,25 @@ public:
 
     void inferImage(Mat& src, Mat& dst);
 
+    Mat getCombinedMask(const Mat& label_map, const std::vector<int>& label_values);
+
 private:
     void preprocess(Mat src);
     Mat getLabelMap(float* output_data, int num_classes, int height, int width);
-    Mat getCombinedMask(const Mat& label_map, const std::vector<int>& label_values);
 
     vector<float> input_image_;
 
     int inpWidth;
     int inpHeight;
+
+    // 定义调色板（BGR）
+    std::vector<cv::Vec3b> palette = {
+            {  0,   0,   0}, {128,   0,   0}, {  0, 128,   0}, {128, 128,   0},
+            {  0,   0, 128}, {128,   0, 128}, {  0, 128, 128}, {128, 128, 128},
+            { 64,   0,   0}, {192,   0,   0}, { 64, 128,   0}, {192, 128,   0},
+            { 64,   0, 128}, {192,   0, 128}, { 64, 128, 128}, {192, 128, 128},
+            {  0,  64,   0}, {128,  64,   0}, {  0, 192,   0}
+    };
 };
 
 #endif //MONICAIMAGEPROCESSHTTPSERVER_FACEPARSING_H
