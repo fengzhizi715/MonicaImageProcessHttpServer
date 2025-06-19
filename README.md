@@ -178,7 +178,15 @@ curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/
 
 curl 调用的示例:
 ```
-curl -X POST "http://localhost:8080/api/changePersonBackground" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "background=@/Users/Tony/background.jpg" --output result.jpg
+curl -X POST "http://localhost:8080/api/changePersonBackground" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "background=@/Users/Tony/background.jpg" --output output.jpg
+```
+
+## 3.2.7 /api/changeHairColor
+换发色
+
+curl 调用的示例:
+```
+curl -X POST "http://localhost:8080/api/changeHairColor?targetHue=110" -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/src.jpg" --output output.jpg
 ```
 
 # 四. 深度学习的模型
