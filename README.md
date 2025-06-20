@@ -30,6 +30,7 @@ MonicaImageProcessHttpServer/
 │       └── BeautyGan.cpp            # 使用 OnnxRuntime 加载 BeautyGan 模型实现化妆的源文件
 │       └── CodeFormer.cpp           # 使用 OnnxRuntime 加载 CodeFormer 模型实现人脸细节重建的源文件
 │       └── FaceParsing.cpp          # 使用 OnnxRuntime 加载 Face Parsing 模型获得精准的面部掩码的源文件
+│       └── Modnet.cpp               # 使用 OnnxRuntime 加载 Modnet 模型获得人像前景的源文件
 │   └── faceDetect/                  # 人脸识别模块
 │       └── FaceDetect.cpp           # 使用 OpenCV 的 dnn 模块加载模型实现的人脸识别检测的源文件
 │   └── faceSwap/                    # 人脸替换模块
