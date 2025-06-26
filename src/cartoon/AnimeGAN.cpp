@@ -3,8 +3,6 @@
 //
 
 #include "../../include/cartoon/AnimeGAN.h"
-#include "../../include/utils/Timer.h"
-#include "../utils/aixlog.hpp"
 
 AnimeGAN::AnimeGAN(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
@@ -40,8 +38,6 @@ cv::Mat tensor_to_mat_nhwc(const float* data, int h, int w) {
 
 void AnimeGAN::inferImage(Mat& src, Mat& dst)
 {
-    double inferImageTime = 0.0;
-    Timer inferImageTimer = Timer(inferImageTime, true);
     int w = src.cols;
     int h = src.rows;
 
@@ -66,7 +62,4 @@ void AnimeGAN::inferImage(Mat& src, Mat& dst)
     dst.convertTo(dst, CV_8UC3, 255.0);      // 转回 [0,255]
 
     cv::resize(dst, dst, cv::Size(w, h));
-
-    inferImageTimer.stop();
-    PLOG(L_INFO) << "AnimeGAN::inferImage function take " << (inferImageTime * 1000.0) << "ms to complete the process" << endl;
 }

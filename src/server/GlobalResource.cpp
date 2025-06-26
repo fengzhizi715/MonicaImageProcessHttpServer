@@ -8,6 +8,7 @@
 #include "../../include/server/GlobalResource.h"
 #include "../../include/onnxruntime/Constants.h"
 #include "../utils/aixlog.hpp"
+#include "../../include/utils/Timer.h"
 
 GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
 
@@ -136,6 +137,9 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
 Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
     PLOG(L_INFO) << "process FaceSwap..." << endl;
 
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
+
     vector<Bbox> boxes;
     yolov8Face->detect(src, boxes);
     int position = 0; // 一张图片里可能有多个人脸，这里只考虑1个人脸的情况
@@ -165,6 +169,9 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
             dst = faceEnhance.get()->process(swap, target_landmark_5);
         }
     }
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processFaceSwap function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
 
     return dst;
 }
