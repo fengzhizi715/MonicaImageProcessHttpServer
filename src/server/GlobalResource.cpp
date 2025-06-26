@@ -258,13 +258,23 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
 Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
     PLOG(L_INFO) << "process change person background..." << endl;
 
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
+
     Mat dst;
     modnet.get()->changeBackground(src,background,dst);
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processPersonBackground function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
     return dst;
 }
 
 Mat GlobalResource::changeHairColor(Mat src, int target_hue, float saturation_scale) {
     PLOG(L_INFO) << "process change hair color..." << endl;
+
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
 
     Mat mask;
     modnet.get()->inferImage(src, mask);
@@ -289,5 +299,9 @@ Mat GlobalResource::changeHairColor(Mat src, int target_hue, float saturation_sc
     hair_mask_roi.copyTo(hair_mask(face_roi));
 
     cv::Mat recolored = changeHairColor_HSV(src, hair_mask, target_hue, saturation_scale);
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::changeHairColor function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
     return recolored;
 }
