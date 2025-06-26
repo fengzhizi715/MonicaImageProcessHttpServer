@@ -95,22 +95,39 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
 Mat GlobalResource::processSketchDrawing(Mat src) {
     PLOG(L_INFO) << "process SketchDrawing..." << std::endl;
 
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
+
     Mat dst;
     sketchDrawing.get()->inferImage(src, dst);
     cvtColor(dst, dst, cv::COLOR_GRAY2BGR);
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processSketchDrawing function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
     return dst;
 }
 
 Mat GlobalResource::processFaceDetect(Mat src) {
     PLOG(L_INFO) << "process FaceDetect..." << endl;
 
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
+
     Mat dst;
     faceDetect.get()->inferImage(src, dst);
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processFaceDetect function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
     return dst;
 }
 
 Mat GlobalResource::processFaceLandMark(Mat src) {
     PLOG(L_INFO) << "process FaceLandMark..." << endl;
+
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
 
     Mat dst;
 
@@ -131,6 +148,10 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
         }
     } catch(...) {
     }
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processFaceLandMark function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
     return dst;
 }
 
@@ -213,6 +234,9 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
 Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     PLOG(L_INFO) << "process Beauty..." << endl;
 
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
+
     // 人脸检测与裁剪
     Mat original_face;
     Bbox box;
@@ -252,6 +276,10 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
 
     // 最后再用 GFPGAN 模型对人脸进行增强
     Mat result = faceEnhance.get()->process(src, face_landmark_5of68);
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processBeauty function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
     return result;
 }
 
