@@ -142,7 +142,7 @@ curl 调用的示例:
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
 
-## 3.2.2 /api/faceDetect
+### 3.2.2 /api/faceDetect
 提供人脸识别的服务
 
 curl 调用的示例:
@@ -150,7 +150,7 @@ curl 调用的示例:
 curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
 
-## 3.2.3 /api/faceLandMark
+### 3.2.3 /api/faceLandMark
 提供人脸检测的服务
 
 curl 调用的示例:
@@ -158,7 +158,7 @@ curl 调用的示例:
 curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
 
-## 3.2.4 /api/faceSwap
+### 3.2.4 /api/faceSwap
 提供人脸替换的服务
 
 curl 调用的示例:
@@ -166,7 +166,7 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/Tony/target.jpg" --output output.jpg
 ```
 
-## 3.2.5 /api/cartoon
+### 3.2.5 /api/cartoon
 将图像转换成不同的漫画卡通风格
 
 curl 调用的示例:
@@ -174,7 +174,7 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/src.jpg" --output output.jpg
 ```
 
-## 3.2.6 /api/changePersonBackground
+### 3.2.6 /api/changePersonBackground
 保留图像中的人物，并替换其背景。目前只适用于单人的图像
 
 curl 调用的示例:
@@ -182,7 +182,7 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/changePersonBackground" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "background=@/Users/Tony/background.jpg" --output output.jpg
 ```
 
-## 3.2.7 /api/changeHairColor
+### 3.2.7 /api/changeHairColor
 换发色
 
 curl 调用的示例:
