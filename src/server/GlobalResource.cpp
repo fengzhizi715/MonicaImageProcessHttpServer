@@ -179,6 +179,9 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
 Mat GlobalResource::processCartoon(Mat src, int type) {
     PLOG(L_INFO) << "process Cartoon..." << endl;
 
+    double processTime = 0.0;
+    Timer processTimer = Timer(processTime, true);
+
     Mat dst;
     switch(type) {
         case 1:
@@ -199,6 +202,9 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
         default:
             animeGANHayao.get()->inferImage(src, dst);
     }
+
+    processTimer.stop();
+    PLOG(L_INFO) << "GlobalResource::processCartoon function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
 
     return dst;
 }
