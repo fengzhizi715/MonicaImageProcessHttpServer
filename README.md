@@ -202,6 +202,8 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/changeHairColor?targetHue=110" -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/src.jpg" --output output.jpg
 ```
 
+![](images/8.png)
+
 # 四. 深度学习的模型
 存放在当前项目的 /models 文件夹下
 
