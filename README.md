@@ -174,15 +174,23 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/src.jpg" --output output.jpg
 ```
 
-### 3.2.6 /api/changePersonBackground
+### 3.2.6 /api/faceBeauty
+人脸美颜
+
+curl 调用的示例:
+```
+curl -X POST "http://localhost:8080/api/faceBeauty" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "makeup=@/Users/Tony/src.jpg" --output output.jpg
+```
+
+### 3.2.7 /api/changePersonBackground
 保留图像中的人物，并替换其背景。目前只适用于单人的图像
 
 curl 调用的示例:
 ```
-curl -X POST "http://localhost:8080/api/changePersonBackground" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "background=@/Users/Tony/background.jpg" --output output.jpg
+curl -X POST "http://localhost:8080/api/changePersonBackground" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "background=@/Users/Tony/makeup.jpg" --output output.jpg
 ```
 
-### 3.2.7 /api/changeHairColor
+### 3.2.8 /api/changeHairColor
 换发色
 
 curl 调用的示例:
