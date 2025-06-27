@@ -196,9 +196,7 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/faceBeauty" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "makeup=@/Users/Tony/src.jpg" --output output.jpg
 ```
 
-![](images/6-1.png)
-
-![](images/6-2.png)
+![](images/6.png)
 
 ### 3.2.7 /api/changePersonBackground
 保留图像中的人物，并替换其背景。目前只适用于单人的图像
