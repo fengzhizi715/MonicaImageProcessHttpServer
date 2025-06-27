@@ -115,7 +115,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${LINUX_PROJECT_NAME} ${SRC_FILES})
+    add_executable(${PROJECT_NAME} ${SRC_FILES})
 
     if(ENABLE_CUDA)
         target_compile_definitions(${PROJECT_NAME} PRIVATE USE_GPU)
