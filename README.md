@@ -180,6 +180,10 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/cartoon?type=1" -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/src.jpg" --output output.jpg
 ```
 
+![](images/5-1.png)
+
+![](images/5-2.png)
+
 ### 3.2.6 /api/faceBeauty
 人脸美颜
 
