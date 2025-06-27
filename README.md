@@ -142,6 +142,8 @@ curl 调用的示例:
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
 
+![](images/1.png)
+
 ### 3.2.2 /api/faceDetect
 提供人脸识别的服务
 
@@ -149,6 +151,8 @@ curl 调用的示例:
 ```
 curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
+
+![](images/2.png)
 
 ### 3.2.3 /api/faceLandMark
 提供人脸检测的服务
