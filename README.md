@@ -172,6 +172,10 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/Tony/target.jpg" --output output.jpg
 ```
 
+![](images/4-1.png)
+
+![](images/4-2.png)
+
 ### 3.2.5 /api/cartoon
 将图像转换成不同的漫画卡通风格
 
@@ -191,6 +195,10 @@ curl 调用的示例:
 ```
 curl -X POST "http://localhost:8080/api/faceBeauty" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "makeup=@/Users/Tony/src.jpg" --output output.jpg
 ```
+
+![](images/6-1.png)
+
+![](images/6-2.png)
 
 ### 3.2.7 /api/changePersonBackground
 保留图像中的人物，并替换其背景。目前只适用于单人的图像
