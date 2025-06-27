@@ -196,6 +196,10 @@ curl 调用的示例:
 curl -X POST "http://localhost:8080/api/changePersonBackground" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "background=@/Users/Tony/makeup.jpg" --output output.jpg
 ```
 
+![](images/7-1.png)
+
+![](images/7-2.png)
+
 ### 3.2.8 /api/changeHairColor
 换发色
 
