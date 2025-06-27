@@ -88,9 +88,6 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
-    # Mac M 芯片打包的应用名称
-    set(ARM64_PROJECT_NAME "MonicaImageProcessHttpServerForAARCH64")
-
     # 指定ONNX Runtime的路径
     set(ONNXRUNTIME_ROOT "/Users/tony/onnxruntime/onnxruntime-osx-arm64-1.10.0")
     # 包含ONNX Runtime头文件
@@ -98,16 +95,14 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${ARM64_PROJECT_NAME} ${SRC_FILES})
+    add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-    target_link_libraries(${ARM64_PROJECT_NAME}
+    target_link_libraries(${PROJECT_NAME}
             ${OpenCV_LIBS}
             ${Boost_LIBRARIES}
             ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "Linux")
-    set(LINUX_PROJECT_NAME "MonicaImageProcessHttpServerForLinux")
-
     # 指定ONNX Runtime的路径
     if(ENABLE_CUDA)
         set(ONNXRUNTIME_ROOT "/home/xxx/onnxruntime/onnxruntime-linux-x64-gpu-1.10.0")
@@ -123,10 +118,10 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
     add_executable(${LINUX_PROJECT_NAME} ${SRC_FILES})
 
     if(ENABLE_CUDA)
-        target_compile_definitions(${LINUX_PROJECT_NAME} PRIVATE USE_GPU)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE USE_GPU)
     endif()
 
-    target_link_libraries(${LINUX_PROJECT_NAME}
+    target_link_libraries(${PROJECT_NAME}
             ${OpenCV_LIBS}
             ${Boost_LIBRARIES}
             ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.so.1.10.0)
