@@ -162,6 +162,8 @@ curl 调用的示例:
 curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
 
+![](images/3.png)
+
 ### 3.2.4 /api/faceSwap
 提供人脸替换的服务
 
