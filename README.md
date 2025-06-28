@@ -238,5 +238,5 @@ curl -X POST "http://localhost:8080/api/changeHairColor?targetHue=110" -H "Conte
 
 # 五. TODO List:
 
-* 人脸美颜的服务
-* ONNXRuntime 版本升级
+* 完善人脸美颜的服务
+* ONNXRuntime 版本升级，优化相关代码
