@@ -223,7 +223,7 @@ curl -X POST "http://localhost:8080/api/changeHairColor?targetHue=110" -H "Conte
 # 四. 深度学习的模型
 存放在当前项目的 /models 文件夹下
 
-> 目前，有几个模型没有提交到 github，主要是太大了。每个都超过了 100 M 我把他们放到百度网盘
+> 目前，有四个模型没有提交到 github，他们每个都超过了 100 M ，所以我把他们放到百度网盘
 >
 > 链接: https://pan.baidu.com/s/15XhVHKi-vPGjB2hYa33v_A?pwd=d9mm
 >
