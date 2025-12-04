@@ -6,6 +6,7 @@
 #define MONICAIMAGEPROCESS_GLOBALRESOURCE_H
 
 #include <memory>
+#include <mutex>
 #include "../../include/cartoon/AnimeGAN.h"
 #include "../../include/sketchDrawing/SketchDrawing.h"
 #include "../../include/faceDetect/FaceDetect.h"
@@ -19,24 +20,20 @@
 #include "../../include/faceBeauty/FaceParsing.h"
 #include "../../include/faceBeauty/Modnet.h"
 
-
-using namespace std;
-using namespace cv;
-
 class GlobalResource {
 public:
-    GlobalResource(string modelPath);
-    Mat processSketchDrawing(Mat src);
-    Mat processFaceDetect(Mat src);
-    Mat processFaceLandMark(Mat src);
-    Mat processFaceSwap(Mat src, Mat target, bool status);
-    Mat processCartoon(Mat src, int type);
-    Mat processBeauty(Mat src, Mat makeup);
-    Mat processPersonBackground(Mat src, Mat background);
-    Mat changeHairColor(Mat src, int target_hue, float saturation_scale);
+    GlobalResource(std::string modelPath);
+    cv::Mat processSketchDrawing(cv::Mat src);
+    cv::Mat processFaceDetect(cv::Mat src);
+    cv::Mat processFaceLandMark(cv::Mat src);
+    cv::Mat processFaceSwap(cv::Mat src, cv::Mat target, bool status);
+    cv::Mat processCartoon(cv::Mat src, int type);
+    cv::Mat processBeauty(cv::Mat src, cv::Mat makeup);
+    cv::Mat processPersonBackground(cv::Mat src, cv::Mat background);
+    cv::Mat changeHairColor(cv::Mat src, int target_hue, float saturation_scale);
 
 private:
-    string modelPath;
+    std::string modelPath;
 
     std::unique_ptr<SketchDrawing>   sketchDrawing;
     std::unique_ptr<FaceDetect>      faceDetect;
@@ -57,6 +54,20 @@ private:
     std::unique_ptr<FaceParsing>     faceParsing;
 
     std::unique_ptr<Modnet>          modnet;
+    
+    // Thread-safe protection for shared model access
+    mutable std::mutex sketchDrawing_mutex_;
+    mutable std::mutex faceDetect_mutex_;
+    mutable std::mutex yolov8Face_mutex_;
+    mutable std::mutex face68Landmarks_mutex_;
+    mutable std::mutex faceEmbedding_mutex_;
+    mutable std::mutex faceSwap_mutex_;
+    mutable std::mutex faceEnhance_mutex_;
+    mutable std::mutex animeGAN_mutex_;
+    mutable std::mutex beautyGan_mutex_;
+    mutable std::mutex codeFormer_mutex_;
+    mutable std::mutex faceParsing_mutex_;
+    mutable std::mutex modnet_mutex_;
 };
 
 #endif //MONICAIMAGEPROCESS_GLOBALRESOURCE_H

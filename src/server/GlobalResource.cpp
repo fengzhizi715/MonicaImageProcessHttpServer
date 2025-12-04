@@ -99,7 +99,10 @@ Mat GlobalResource::processSketchDrawing(Mat src) {
     Timer processTimer = Timer(processTime, true);
 
     Mat dst;
-    sketchDrawing.get()->inferImage(src, dst);
+    {
+        std::lock_guard<std::mutex> lock(sketchDrawing_mutex_);
+        sketchDrawing.get()->inferImage(src, dst);
+    }
     cvtColor(dst, dst, cv::COLOR_GRAY2BGR);
 
     processTimer.stop();
@@ -115,7 +118,10 @@ Mat GlobalResource::processFaceDetect(Mat src) {
     Timer processTimer = Timer(processTime, true);
 
     Mat dst;
-    faceDetect.get()->inferImage(src, dst);
+    {
+        std::lock_guard<std::mutex> lock(faceDetect_mutex_);
+        faceDetect.get()->inferImage(src, dst);
+    }
 
     processTimer.stop();
     PLOG(L_INFO) << "GlobalResource::processFaceDetect function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
@@ -134,19 +140,33 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
     cv::Scalar scalar(0, 0, 255);
     try {
         vector<Bbox> boxes;
-        yolov8Face.get()->detect(src, boxes);
+        {
+            std::lock_guard<std::mutex> lock(yolov8Face_mutex_);
+            yolov8Face.get()->detect(src, boxes);
+        }
+        
+        if (boxes.empty()) {
+            PLOG(L_WARNING) << "No faces detected in image for landmark detection";
+            return src.clone();
+        }
+        
         dst = src.clone();
         for (auto box: boxes) {
            rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), scalar, 4, 8, 0);
 
            vector<Point2f> face_landmark_5of68;
-           face68Landmarks.get()->detect(src, box, face_landmark_5of68);
+           {
+               std::lock_guard<std::mutex> lock(face68Landmarks_mutex_);
+               face68Landmarks.get()->detect(src, box, face_landmark_5of68);
+           }
            for (auto point : face_landmark_5of68)
            {
                circle(dst, cv::Point(point.x, point.y), 4, scalar, -1);
            }
         }
-    } catch(...) {
+    } catch (const std::exception& e) {
+        PLOG(L_ERROR) << "Error in processFaceLandMark: " << e.what();
+        return src.clone();
     }
 
     processTimer.stop();
@@ -161,40 +181,88 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
     double processTime = 0.0;
     Timer processTimer = Timer(processTime, true);
 
-    vector<Bbox> boxes;
-    yolov8Face->detect(src, boxes);
-    int position = 0; // 一张图片里可能有多个人脸，这里只考虑1个人脸的情况
-
-    Bbox firstBox = boxes[position];
-
-    vector<Point2f> face_landmark_5of68;
-    face68Landmarks.get()->detect(src, boxes[position], face_landmark_5of68);
-    vector<float> source_face_embedding = faceEmbedding.get()->detect(src, face_landmark_5of68);
-    yolov8Face.get() -> detect(target, boxes);
-    Mat dst = target.clone();
-
-    if (!boxes.empty()) {
-        if (status) {
-            for (auto box: boxes) {
-                vector<Point2f> target_landmark_5;
-                face68Landmarks.get()->detect(dst, box, target_landmark_5);
-
-                Mat swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
-                dst = faceEnhance.get()->process(swap, target_landmark_5);
-            }
-        } else {
-            Bbox  box = boxes[0];
-            vector<Point2f> target_landmark_5;
-            face68Landmarks.get()->detect(dst, box, target_landmark_5);
-            Mat swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
-            dst = faceEnhance.get()->process(swap, target_landmark_5);
+    try {
+        vector<Bbox> boxes;
+        {
+            std::lock_guard<std::mutex> lock(yolov8Face_mutex_);
+            yolov8Face->detect(src, boxes);
         }
+        
+        if (boxes.empty()) {
+            throw std::runtime_error("No faces detected in source image");
+        }
+        
+        int position = 0;
+        Bbox firstBox = boxes[position];
+
+        vector<Point2f> face_landmark_5of68;
+        {
+            std::lock_guard<std::mutex> lock(face68Landmarks_mutex_);
+            face68Landmarks.get()->detect(src, boxes[position], face_landmark_5of68);
+        }
+        
+        vector<float> source_face_embedding;
+        {
+            std::lock_guard<std::mutex> lock(faceEmbedding_mutex_);
+            source_face_embedding = faceEmbedding.get()->detect(src, face_landmark_5of68);
+        }
+        
+        {
+            std::lock_guard<std::mutex> lock(yolov8Face_mutex_);
+            yolov8Face.get() -> detect(target, boxes);
+        }
+        
+        Mat dst = target.clone();
+
+        if (!boxes.empty()) {
+            if (status) {
+                for (auto box: boxes) {
+                    vector<Point2f> target_landmark_5;
+                    {
+                        std::lock_guard<std::mutex> lock(face68Landmarks_mutex_);
+                        face68Landmarks.get()->detect(dst, box, target_landmark_5);
+                    }
+
+                    Mat swap;
+                    {
+                        std::lock_guard<std::mutex> lock(faceSwap_mutex_);
+                        swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
+                    }
+                    
+                    {
+                        std::lock_guard<std::mutex> lock(faceEnhance_mutex_);
+                        dst = faceEnhance.get()->process(swap, target_landmark_5);
+                    }
+                }
+            } else {
+                Bbox  box = boxes[0];
+                vector<Point2f> target_landmark_5;
+                {
+                    std::lock_guard<std::mutex> lock(face68Landmarks_mutex_);
+                    face68Landmarks.get()->detect(dst, box, target_landmark_5);
+                }
+                
+                Mat swap;
+                {
+                    std::lock_guard<std::mutex> lock(faceSwap_mutex_);
+                    swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
+                }
+                
+                {
+                    std::lock_guard<std::mutex> lock(faceEnhance_mutex_);
+                    dst = faceEnhance.get()->process(swap, target_landmark_5);
+                }
+            }
+        }
+
+        processTimer.stop();
+        PLOG(L_INFO) << "GlobalResource::processFaceSwap function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
+        return dst;
+    } catch (const std::exception& e) {
+        PLOG(L_ERROR) << "Error in processFaceSwap: " << e.what();
+        throw;
     }
-
-    processTimer.stop();
-    PLOG(L_INFO) << "GlobalResource::processFaceSwap function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
-
-    return dst;
 }
 
 Mat GlobalResource::processCartoon(Mat src, int type) {
@@ -204,24 +272,27 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
     Timer processTimer = Timer(processTime, true);
 
     Mat dst;
-    switch(type) {
-        case 1:
-            animeGANHayao.get()->inferImage(src, dst);
-            break;
-        case 2:
-            animeGANJPFace.get()->inferImage(src, dst);
-            break;
-        case 3:
-            animeGANPortraitSketch.get()->inferImage(src, dst);
-            break;
-        case 4:
-            animeGANShinkai.get()->inferImage(src, dst);
-            break;
-        case 5:
-            animeGANTinyCute.get()->inferImage(src, dst);
-            break;
-        default:
-            animeGANHayao.get()->inferImage(src, dst);
+    {
+        std::lock_guard<std::mutex> lock(animeGAN_mutex_);
+        switch(type) {
+            case 1:
+                animeGANHayao.get()->inferImage(src, dst);
+                break;
+            case 2:
+                animeGANJPFace.get()->inferImage(src, dst);
+                break;
+            case 3:
+                animeGANPortraitSketch.get()->inferImage(src, dst);
+                break;
+            case 4:
+                animeGANShinkai.get()->inferImage(src, dst);
+                break;
+            case 5:
+                animeGANTinyCute.get()->inferImage(src, dst);
+                break;
+            default:
+                animeGANHayao.get()->inferImage(src, dst);
+        }
     }
 
     processTimer.stop();
@@ -237,50 +308,80 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     double processTime = 0.0;
     Timer processTimer = Timer(processTime, true);
 
-    // 人脸检测与裁剪
-    Mat original_face;
-    Bbox box;
     try {
-        vector<Bbox> boxes;
-        yolov8Face.get()->detect(src, boxes);
-        box = boxes[0];
+        // 人脸检测与裁切
+        Mat original_face;
+        Bbox box;
+        try {
+            vector<Bbox> boxes;
+            {
+                std::lock_guard<std::mutex> lock(yolov8Face_mutex_);
+                yolov8Face.get()->detect(src, boxes);
+            }
+            
+            if (boxes.empty()) {
+                throw std::runtime_error("No faces detected in image");
+            }
+            
+            box = boxes[0];
+            original_face = src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax)));
+        } catch(const std::exception& e) {
+            PLOG(L_ERROR) << "Face detection failed: " << e.what();
+            throw;
+        }
 
-        original_face = src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax)));
-    } catch(...) {
+        // 查找人脸的关键点
+        vector<Point2f> face_landmark_5of68;
+        {
+            std::lock_guard<std::mutex> lock(face68Landmarks_mutex_);
+            face68Landmarks.get()->detect(src, box, face_landmark_5of68);
+        }
+
+        // 人脸解析与获取掩码
+        cv::Mat parsing_result, skin_mask;
+        {
+            std::lock_guard<std::mutex> lock(faceParsing_mutex_);
+            faceParsing.get()->inferImage(original_face, parsing_result);
+            faceParsing.get()->getSkinMask(parsing_result, skin_mask);
+        }
+
+        // 美颜模型处理
+        Mat beautygan_crop;
+        {
+            std::lock_guard<std::mutex> lock(beautyGan_mutex_);
+            beautyGan.get()->inferImage(original_face, makeup, beautygan_crop);
+        }
+
+        // 使用 CodeFormer 对人脸优化细节
+        Mat codeformed_face;
+        {
+            std::lock_guard<std::mutex> lock(codeFormer_mutex_);
+            codeFormer.get()->inferImage(beautygan_crop, codeformed_face);
+        }
+        resize(codeformed_face, codeformed_face, original_face.size());
+
+        // 通过掩码将处理后人脸融回原图
+        cv::resize(skin_mask, skin_mask, codeformed_face.size());
+        Point center(original_face.cols/2, original_face.rows/2);
+        cv::Mat blended_face;
+        cv::seamlessClone(codeformed_face, original_face, skin_mask, center, blended_face, NORMAL_CLONE);
+        blended_face.copyTo(src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax))));
+
+        // 最后再用 GFPGAN 模型对人脸进行增强
+        Mat result;
+        {
+            std::lock_guard<std::mutex> lock(faceEnhance_mutex_);
+            result = faceEnhance.get()->process(src, face_landmark_5of68);
+        }
+
+        processTimer.stop();
+        PLOG(L_INFO) << "GlobalResource::processBeauty function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+
+        return result;
+    } catch (const std::exception& e) {
+        PLOG(L_ERROR) << "Error in processBeauty: " << e.what();
+        throw;
     }
-
-    // 查找人脸的关键点
-    vector<Point2f> face_landmark_5of68;
-    face68Landmarks.get()->detect(src, box, face_landmark_5of68);
-
-    // 人脸解析与获取掩码
-    cv::Mat parsing_result, skin_mask;
-    faceParsing.get()->inferImage(original_face, parsing_result);
-    faceParsing.get()->getSkinMask(parsing_result, skin_mask);
-
-    // 美颜模型处理
-    Mat beautygan_crop;
-    beautyGan.get()->inferImage(original_face, makeup, beautygan_crop);
-
-    // 使用 CodeFormer 对人脸优化细节
-    Mat codeformed_face; // CodeFormer 输出的人脸
-    codeFormer.get()->inferImage(beautygan_crop, codeformed_face);
-    resize(codeformed_face, codeformed_face, original_face.size());
-
-    // 通过掩码将处理后人脸融回原图
-    cv::resize(skin_mask, skin_mask, codeformed_face.size());
-    Point center(original_face.cols/2, original_face.rows/2);
-    cv::Mat blended_face;
-    cv::seamlessClone(codeformed_face, original_face, skin_mask, center, blended_face, NORMAL_CLONE);
-    blended_face.copyTo(src(Rect(cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax))));
-
-    // 最后再用 GFPGAN 模型对人脸进行增强
-    Mat result = faceEnhance.get()->process(src, face_landmark_5of68);
-
-    processTimer.stop();
-    PLOG(L_INFO) << "GlobalResource::processBeauty function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
-
-    return result;
 }
 
 Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
@@ -290,7 +391,10 @@ Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
     Timer processTimer = Timer(processTime, true);
 
     Mat dst;
-    modnet.get()->changeBackground(src,background,dst);
+    {
+        std::lock_guard<std::mutex> lock(modnet_mutex_);
+        modnet.get()->changeBackground(src,background,dst);
+    }
 
     processTimer.stop();
     PLOG(L_INFO) << "GlobalResource::processPersonBackground function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
@@ -304,32 +408,43 @@ Mat GlobalResource::changeHairColor(Mat src, int target_hue, float saturation_sc
     double processTime = 0.0;
     Timer processTimer = Timer(processTime, true);
 
-    Mat mask;
-    modnet.get()->inferImage(src, mask);
+    try {
+        Mat mask;
+        {
+            std::lock_guard<std::mutex> lock(modnet_mutex_);
+            modnet.get()->inferImage(src, mask);
+        }
 
-    cv::Rect face_roi = getSmartFaceROIFromAlpha(mask);
-    cv::Mat face_crop = src(face_roi).clone();
+        cv::Rect face_roi = getSmartFaceROIFromAlpha(mask);
+        cv::Mat face_crop = src(face_roi).clone();
 
-    // 人脸解析与获取掩码
-    cv::Mat class_idx;
-    faceParsing.get()->inferImage(face_crop, class_idx);
+        // 人脸解析与获取掩码
+        cv::Mat class_idx;
+        {
+            std::lock_guard<std::mutex> lock(faceParsing_mutex_);
+            faceParsing.get()->inferImage(face_crop, class_idx);
+        }
 
-    // 提取头发区域的 mask
-    cv::Mat hair_mask_small = (class_idx == 17);
-    hair_mask_small.convertTo(hair_mask_small, CV_8UC1, 255);
+        // 提取头发区域的 mask
+        cv::Mat hair_mask_small = (class_idx == 17);
+        hair_mask_small.convertTo(hair_mask_small, CV_8UC1, 255);
 
-    // Resize 回 ROI 尺寸
-    cv::Mat hair_mask_roi;
-    cv::resize(hair_mask_small, hair_mask_roi, face_roi.size(), 0, 0, cv::INTER_NEAREST);
+        // Resize 回 ROI 尺寸
+        cv::Mat hair_mask_roi;
+        cv::resize(hair_mask_small, hair_mask_roi, face_roi.size(), 0, 0, cv::INTER_NEAREST);
 
-    // 映射回原图尺寸
-    cv::Mat hair_mask = cv::Mat::zeros(src.size(), CV_8UC1);
-    hair_mask_roi.copyTo(hair_mask(face_roi));
+        // 映射回原图尺寸
+        cv::Mat hair_mask = cv::Mat::zeros(src.size(), CV_8UC1);
+        hair_mask_roi.copyTo(hair_mask(face_roi));
 
-    cv::Mat recolored = changeHairColor_HSV(src, hair_mask, target_hue, saturation_scale);
+        cv::Mat recolored = changeHairColor_HSV(src, hair_mask, target_hue, saturation_scale);
 
-    processTimer.stop();
-    PLOG(L_INFO) << "GlobalResource::changeHairColor function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
+        processTimer.stop();
+        PLOG(L_INFO) << "GlobalResource::changeHairColor function take " << (processTime * 1000.0) << "ms to complete the process" << endl;
 
-    return recolored;
+        return recolored;
+    } catch (const std::exception& e) {
+        PLOG(L_ERROR) << "Error in changeHairColor: " << e.what();
+        throw;
+    }
 }

@@ -58,12 +58,12 @@ std::map<std::string, std::vector<uint8_t>> parseMultipartFormDataManual(http::r
     return fileParts;
 }
 
-Mat binaryToCvMat(std::vector<uint8_t>& data) {
+cv::Mat binaryToCvMat(std::vector<uint8_t>& data) {
     cv::Mat rawData(1, data.size(), CV_8UC1, (void*)data.data());
     return cv::imdecode(rawData, cv::IMREAD_COLOR);
 }
 
-Mat requestBodyToCvMat(http::request<http::dynamic_body>& req) {
+cv::Mat requestBodyToCvMat(http::request<http::dynamic_body>& req) {
     // 直接访问请求体的原始字节
     auto& body = req.body();
     auto buffers = body.data();
@@ -86,10 +86,10 @@ Mat requestBodyToCvMat(http::request<http::dynamic_body>& req) {
 }
 
 // 将 cv::Mat 编码为指定格式的二进制数据，并返回一个 std::string
-string cvMatToResponseBody(Mat& image, string extension) {
+std::string cvMatToResponseBody(cv::Mat& image, const std::string& extension) {
     std::vector<uchar> buf;
     if (!cv::imencode(extension, image, buf)) {
         throw std::runtime_error("编码失败");
     }
-    return string(reinterpret_cast<char*>(buf.data()), buf.size()); // 避免二次拷贝
+    return std::string(reinterpret_cast<char*>(buf.data()), buf.size()); // 避免二次拷贝
 }

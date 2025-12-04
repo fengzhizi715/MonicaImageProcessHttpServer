@@ -16,9 +16,9 @@
 #include "../../include/server/GlobalResource.h"
 #include "../../include/server/HttpUtils.h"
 #include "../../include/server/Config.h"
+#include "../../include/server/Server.h"
 #include "../utils/aixlog.hpp"
 #include "../utils/json.hpp"
-#include "Server.cpp"
 
 namespace po = boost::program_options;
 namespace beast = boost::beast;
