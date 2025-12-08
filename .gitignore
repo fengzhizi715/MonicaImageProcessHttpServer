@@ -10,5 +10,7 @@ build.ninja
 MonicaImageProcessHttpServer
 MonicaImageProcessHttpServerForAARCH64
 
+src/build
+
 ### Mac OS ###
 .DS_Store
