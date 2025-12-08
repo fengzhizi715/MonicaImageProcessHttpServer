@@ -23,14 +23,14 @@
 class GlobalResource {
 public:
     GlobalResource(std::string modelPath);
-    cv::Mat processSketchDrawing(cv::Mat src);
-    cv::Mat processFaceDetect(cv::Mat src);
-    cv::Mat processFaceLandMark(cv::Mat src);
-    cv::Mat processFaceSwap(cv::Mat src, cv::Mat target, bool status);
-    cv::Mat processCartoon(cv::Mat src, int type);
-    cv::Mat processBeauty(cv::Mat src, cv::Mat makeup);
-    cv::Mat processPersonBackground(cv::Mat src, cv::Mat background);
-    cv::Mat changeHairColor(cv::Mat src, int target_hue, float saturation_scale);
+    cv::Mat processSketchDrawing(const cv::Mat& src);
+    cv::Mat processFaceDetect(const cv::Mat& src);
+    cv::Mat processFaceLandMark(const cv::Mat& src);
+    cv::Mat processFaceSwap(const cv::Mat& src, const cv::Mat& target, bool status);
+    cv::Mat processCartoon(const cv::Mat& src, int type);
+    cv::Mat processBeauty(const cv::Mat& src, const cv::Mat& makeup);
+    cv::Mat processPersonBackground(const cv::Mat& src, const cv::Mat& background);
+    cv::Mat changeHairColor(const cv::Mat& src, int target_hue, float saturation_scale);
 
 private:
     std::string modelPath;

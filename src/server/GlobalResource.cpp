@@ -92,7 +92,7 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     PLOG(L_INFO) << "GlobalResource initialized." << std::endl;
 }
 
-Mat GlobalResource::processSketchDrawing(Mat src) {
+Mat GlobalResource::processSketchDrawing(const Mat& src) {
     PLOG(L_INFO) << "process SketchDrawing..." << std::endl;
 
     double processTime = 0.0;
@@ -111,7 +111,7 @@ Mat GlobalResource::processSketchDrawing(Mat src) {
     return dst;
 }
 
-Mat GlobalResource::processFaceDetect(Mat src) {
+Mat GlobalResource::processFaceDetect(const Mat& src) {
     PLOG(L_INFO) << "process FaceDetect..." << endl;
 
     double processTime = 0.0;
@@ -129,7 +129,7 @@ Mat GlobalResource::processFaceDetect(Mat src) {
     return dst;
 }
 
-Mat GlobalResource::processFaceLandMark(Mat src) {
+Mat GlobalResource::processFaceLandMark(const Mat& src) {
     PLOG(L_INFO) << "process FaceLandMark..." << endl;
 
     double processTime = 0.0;
@@ -175,7 +175,7 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
     return dst;
 }
 
-Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
+Mat GlobalResource::processFaceSwap(const Mat& src, const Mat& target, bool status) {
     PLOG(L_INFO) << "process FaceSwap..." << endl;
 
     double processTime = 0.0;
@@ -265,7 +265,7 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
     }
 }
 
-Mat GlobalResource::processCartoon(Mat src, int type) {
+Mat GlobalResource::processCartoon(const Mat& src, int type) {
     PLOG(L_INFO) << "process Cartoon..." << endl;
 
     double processTime = 0.0;
@@ -302,7 +302,7 @@ Mat GlobalResource::processCartoon(Mat src, int type) {
 }
 
 // 美颜增强流水线: YOLOv8 -> Face Parsing -> BeautyGAN -> CodeFormer -> Mask 融合回原图
-Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
+Mat GlobalResource::processBeauty(const Mat& src, const Mat& makeup) {
     PLOG(L_INFO) << "process Beauty..." << endl;
 
     double processTime = 0.0;
@@ -384,7 +384,7 @@ Mat GlobalResource::processBeauty(Mat src, Mat makeup) {
     }
 }
 
-Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
+Mat GlobalResource::processPersonBackground(const Mat& src, const Mat& background) {
     PLOG(L_INFO) << "process change person background..." << endl;
 
     double processTime = 0.0;
@@ -402,7 +402,7 @@ Mat GlobalResource::processPersonBackground(Mat src, Mat background) {
     return dst;
 }
 
-Mat GlobalResource::changeHairColor(Mat src, int target_hue, float saturation_scale) {
+Mat GlobalResource::changeHairColor(const Mat& src, int target_hue, float saturation_scale) {
     PLOG(L_INFO) << "process change hair color..." << endl;
 
     double processTime = 0.0;

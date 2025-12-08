@@ -24,7 +24,7 @@ class AnimeGAN: public OnnxRuntimeBase
 public:
     AnimeGAN(std::string modelPath, const char* logId, const char* provider);
 
-    void inferImage(Mat& src, Mat& dst);
+    void inferImage(const Mat& src, Mat& dst);
 
 private:
     const int inpWidth = 512;

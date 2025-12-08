@@ -15,7 +15,7 @@ class Modnet: public OnnxRuntimeBase {
 public:
     Modnet(std::string modelPath, const char* logId, const char* provider);
 
-    void inferImage(Mat& src, Mat& mask);
+    void inferImage(const Mat& src, Mat& mask);
 
     /**
      * 替换人物的背景
@@ -23,7 +23,7 @@ public:
      * @param background
      * @param dst
      */
-    void changeBackground(Mat src, Mat background, Mat& dst);
+    void changeBackground(const Mat& src, const Mat& background, Mat& dst);
 
 private:
     void preprocess(const cv::Mat& image);

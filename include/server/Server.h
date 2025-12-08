@@ -13,6 +13,7 @@
 #include <string>
 #include "../utils/aixlog.hpp"
 #include "LoggingUtils.h"
+#include "Router.h"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -35,10 +36,17 @@ private:
     std::shared_ptr<GlobalResource> globalResource_;
     size_t maxBodySize_;
     std::shared_ptr<RequestLogger::RequestMetrics> requestMetrics_;
+    Router router_;
 
     void do_read();
     void handle_request();
-    void process_image(const std::string& target, std::function<cv::Mat(cv::Mat)> processor);
+    void process_image(const std::string& target, std::function<cv::Mat(const cv::Mat&)> processor);
+    void initializeRoutes();
+    void handleFaceSwap();
+    void handleCartoon();
+    void handleFaceBeauty();
+    void handleChangePersonBackground();
+    void handleChangeHairColor();
 
     template<class Response>
     void do_write(Response& res);

@@ -23,22 +23,24 @@ FaceDetect::FaceDetect(string faceProto,string faceModel,string ageProto,string 
     genderList = {"Male", "Female"};
 }
 
-void FaceDetect::inferImage(Mat& src, Mat& dst) {
+void FaceDetect::inferImage(const Mat& src, Mat& dst) {
 
     int padding = 20;
     vector<vector<int>> bboxes;
 
-    tie(dst, bboxes) = getFaceBox(faceNet, src, 0.7);
+    // Create a mutable copy for getFaceBox which needs to modify
+    Mat src_copy = src.clone();
+    tie(dst, bboxes) = getFaceBox(faceNet, src_copy, 0.7);
 
     if(bboxes.size() == 0) {
         cout << "No face detected..." << endl;
-        dst = src;
+        dst = src.clone();
         return;
     }
 
     for (auto it = begin(bboxes); it != end(bboxes); ++it) {
         Rect rec(it->at(0) - padding, it->at(1) - padding, it->at(2) - it->at(0) + 2*padding, it->at(3) - it->at(1) + 2*padding);
-        Mat face = src(rec); // take the ROI of box on the frame
+        Mat face = src_copy(rec); // take the ROI of box on the frame
 
         Mat blob;
         blob = blobFromImage(face, 1, Size(227, 227), MODEL_MEAN_VALUES, false);

@@ -28,7 +28,7 @@ cv::Mat Modnet::postprocess(float* output_data, int width, int height) {
     return alpha.clone();
 }
 
-void Modnet::inferImage(Mat& src, Mat& mask) {
+void Modnet::inferImage(const Mat& src, Mat& mask) {
     this->preprocess(src);
     std::array<int64_t,4> input_shape {1,3, this->inpHeight, this->inpWidth};
 
@@ -45,7 +45,7 @@ void Modnet::inferImage(Mat& src, Mat& mask) {
     mask = alpha;
 }
 
-void Modnet::changeBackground(Mat src, Mat background, Mat& dst) {
+void Modnet::changeBackground(const Mat& src, const Mat& background, Mat& dst) {
     Mat alpha;
     this->inferImage(src, alpha);
 
@@ -57,12 +57,13 @@ void Modnet::changeBackground(Mat src, Mat background, Mat& dst) {
     cv::Mat image_f, bg_f;
     src.convertTo(image_f, CV_32FC3, 1.0 / 255.0);
 
-    if (background.empty()) {
-        background = Mat(src.size(), CV_8UC3, cv::Scalar(0, 0, 0));
+    Mat bg_copy = background;
+    if (bg_copy.empty()) {
+        bg_copy = Mat(src.size(), CV_8UC3, cv::Scalar(0, 0, 0));
     } else {
-        cv::resize(background, background, src.size());
+        cv::resize(bg_copy, bg_copy, src.size());
     }
-    background.convertTo(bg_f, CV_32FC3, 1.0 / 255.0);
+    bg_copy.convertTo(bg_f, CV_32FC3, 1.0 / 255.0);
 
     // 计算 1 - alpha
     cv::Mat one_minus_alpha;

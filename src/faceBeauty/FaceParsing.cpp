@@ -9,7 +9,7 @@ FaceParsing::FaceParsing(std::string modelPath, const char* logId, const char* p
     this->inpWidth = input_node_dims[0][3];
 }
 
-void FaceParsing::preprocess(Mat src)
+void FaceParsing::preprocess(const Mat& src)
 {
     Mat dst;
     cvtColor(src, dst, COLOR_BGR2RGB);
@@ -61,7 +61,7 @@ Mat FaceParsing::getCombinedMask(const Mat& label_map, const std::vector<int>& l
     return combined_mask;
 }
 
-void FaceParsing::inferImage(Mat& src, Mat& dst) {
+void FaceParsing::inferImage(const Mat& src, Mat& dst) {
     this->preprocess(src);
     std::array<int64_t,4> input_shape {1,3,this->inpHeight, this->inpWidth};
 
@@ -80,7 +80,7 @@ void FaceParsing::inferImage(Mat& src, Mat& dst) {
     dst = getLabelMap(out_data,C,H,W);
 }
 
-void FaceParsing::getSkinMask(Mat& label_map, Mat& dst) {
+void FaceParsing::getSkinMask(const Mat& label_map, Mat& dst) {
     // 提取“皮肤”区域作为人脸轮廓基础 (类别ID=1)
     cv::Mat mask = (label_map==1);
 

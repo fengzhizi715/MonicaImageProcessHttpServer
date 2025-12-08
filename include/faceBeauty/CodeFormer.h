@@ -15,10 +15,10 @@ class CodeFormer: public OnnxRuntimeBase {
 public:
     CodeFormer(std::string modelPath, const char* logId, const char* provider);
 
-    void inferImage(Mat& src, Mat& dst);
+    void inferImage(const Mat& src, Mat& dst);
 
 private:
-    void preprocess(Mat src);
+    void preprocess(const Mat& src);
     vector<float> input_image_;
     vector<double> input2_tensor;
     int inpWidth;

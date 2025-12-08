@@ -22,7 +22,7 @@ class FaceDetect {
 public:
     FaceDetect(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel);
 
-    void inferImage(Mat& src, Mat& dst);
+    void inferImage(const Mat& src, Mat& dst);
 
 private:
     tuple<Mat, vector<vector<int>>> getFaceBox(Net net, Mat &frame, double conf_threshold);

@@ -14,7 +14,7 @@ SketchDrawing::SketchDrawing(string modelPath, const char* logId, const char* pr
     this->outWidth = output_node_dims[0][3];
 }
 
-void SketchDrawing::inferImage(Mat& src, Mat& dst)
+void SketchDrawing::inferImage(const Mat& src, Mat& dst)
 {
     double preprocessTime = 0.0;
     double inferenceTime = 0.0;

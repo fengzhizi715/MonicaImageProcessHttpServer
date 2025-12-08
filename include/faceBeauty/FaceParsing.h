@@ -20,11 +20,11 @@ public:
      * @param src
      * @param dst
      */
-    void inferImage(Mat& src, Mat& dst);
+    void inferImage(const Mat& src, Mat& dst);
 
     Mat getCombinedMask(const Mat& label_map, const std::vector<int>& label_values);
 
-    void getSkinMask(Mat& label_map, Mat& dst);
+    void getSkinMask(const Mat& label_map, Mat& dst);
 
     /**
      * 获取语义分割的 mask
@@ -35,7 +35,7 @@ public:
     Mat getSemanticSegmentationMask(Mat src, Mat label_map);
 
 private:
-    void preprocess(Mat src);
+    void preprocess(const Mat& src);
     Mat getLabelMap(float* output_data, int num_classes, int height, int width);
 
     vector<float> input_image_;

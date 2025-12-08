@@ -12,7 +12,7 @@ CodeFormer::CodeFormer(std::string modelPath, const char* logId, const char* pro
     input2_tensor.push_back(0.5);
 }
 
-void CodeFormer::preprocess(Mat src)
+void CodeFormer::preprocess(const Mat& src)
 {
     Mat dst;
     cvtColor(src, dst, COLOR_BGR2RGB);
@@ -33,7 +33,7 @@ void CodeFormer::preprocess(Mat src)
     }
 }
 
-void CodeFormer::inferImage(Mat& src, Mat& dst)
+void CodeFormer::inferImage(const Mat& src, Mat& dst)
 {
     int im_h = src.rows;
     int im_w = src.cols;

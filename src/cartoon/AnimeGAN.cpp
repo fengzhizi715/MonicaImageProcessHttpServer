@@ -36,7 +36,7 @@ cv::Mat tensor_to_mat_nhwc(const float* data, int h, int w) {
     return output;
 }
 
-void AnimeGAN::inferImage(Mat& src, Mat& dst)
+void AnimeGAN::inferImage(const Mat& src, Mat& dst)
 {
     int w = src.cols;
     int h = src.rows;

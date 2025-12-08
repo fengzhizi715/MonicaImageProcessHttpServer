@@ -11,15 +11,16 @@ BeautyGan::BeautyGan(std::string modelPath, const char* logId, const char* provi
     this->outWidth = output_node_dims[0][3];
 }
 
-vector<float> BeautyGan::preprocess(Mat image)
+vector<float> BeautyGan::preprocess(const Mat& image)
 {
-    cv::resize(image, image, cv::Size(this->inpWidth, this->inpHeight));
-    image.convertTo(image, CV_32F, 1.0 / 255.0);
+    Mat resized;
+    cv::resize(image, resized, cv::Size(this->inpWidth, this->inpHeight));
+    resized.convertTo(resized, CV_32F, 1.0 / 255.0);
 
     std::vector<cv::Mat> channels(3);
-    cv::split(image, channels);
+    cv::split(resized, channels);
 
-    std::vector<float> result(this->inpWidth * this->inpHeight * image.channels());
+    std::vector<float> result(this->inpWidth * this->inpHeight * 3);
     const unsigned int channel_step = inpHeight * inpWidth;
     for (int i = 0; i < 3; ++i) {
         std::memcpy(result.data() + i * channel_step, channels[i].data, channel_step * sizeof(float));
@@ -43,7 +44,7 @@ cv::Mat BeautyGan::postprocess(float* output_data) {
 }
 
 
-void BeautyGan::inferImage(Mat& src, Mat makeup, Mat& dst) {
+void BeautyGan::inferImage(const Mat& src, const Mat& makeup, Mat& dst) {
 
     // 图像预处理
     this->input_image_1 = this->preprocess(src);        // 原始人脸图像

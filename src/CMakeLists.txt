@@ -55,6 +55,7 @@ set(SRC_FILES
         ../include/server/HttpUtils.h               server/HttpUtils.cpp
                                                     server/Server.cpp
         ../include/server/LoggingUtils.h             server/LoggingUtils.cpp
+        ../include/server/Router.h                   server/Router.cpp
         ../include/faceBeauty/CodeFormer.h          faceBeauty/CodeFormer.cpp
         ../include/faceBeauty/FaceParsing.h         faceBeauty/FaceParsing.cpp
         ../include/faceBeauty/BeautyGan.h           faceBeauty/BeautyGan.cpp

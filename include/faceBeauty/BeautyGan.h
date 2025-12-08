@@ -15,10 +15,10 @@ class BeautyGan: public OnnxRuntimeBase {
 public:
     BeautyGan(std::string modelPath, const char* logId, const char* provider);
 
-    void inferImage(Mat& src, Mat makeup, Mat& dst);
+    void inferImage(const Mat& src, const Mat& makeup, Mat& dst);
 
 private:
-    vector<float> preprocess(Mat image);
+    vector<float> preprocess(const Mat& image);
     Mat postprocess(float* output_data);
 
     vector<float> input_image_1;
